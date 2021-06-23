@@ -13,7 +13,7 @@
 
 // 3. All advertising materials mentioning features or use of this software must
 //    display the following acknowledgement:
-//      This product includes the Base64 Utilities Library or a modified version, 
+//      This product includes the Base64 Utilities Library or a modified version,
 //      originally developed by FearlessDoggo21.
 
 // 4. Neither the name of the copyright holder nor the names of its
@@ -38,7 +38,7 @@
 /*
 Base64URL encoding map
 */
-static const uint8_t *encodeMap = 
+static const uint8_t *encodeMap =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "abcdefghijklmnopqrstuvwxyz"
     "0123456789"
@@ -54,13 +54,14 @@ Remarks:
 static uint8_t DecodeChar(const uint8_t ch) {
     if (ch >= 'A' && ch <= 'Z') {
         return ch - 'A';
-    } else if (ch >= 'a' && ch <= 'z') {
-        return ch - 'a' + 26;
-    } else if (ch >= '0' && ch <= '9') {
-        return ch - '0' + 52;
-    } else {
-        return 62 + (ch == '_');
     }
+    if (ch >= 'a' && ch <= 'z') {
+        return ch - 'a' + 26;
+    }
+    if (ch >= '0' && ch <= '9') {
+        return ch - '0' + 52;
+    }
+    return 63 - (ch == '-');
 }
 
 /*

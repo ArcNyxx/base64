@@ -13,7 +13,7 @@
 
 // 3. All advertising materials mentioning features or use of this software must
 //    display the following acknowledgement:
-//      This product includes the Base64 Utilities Library or a modified version, 
+//      This product includes the Base64 Utilities Library or a modified version,
 //      originally developed by FearlessDoggo21.
 
 // 4. Neither the name of the copyright holder nor the names of its
@@ -131,7 +131,7 @@ uint8_t VerifyBase64(const uint8_t *string) {
             (temp == '-') ||
             (temp == '_')
         )) {
-            if (temp == '=' && 
+            if (temp == '=' &&
                 (string[index + 1] == '\0' || // Only check further if not end
                 (string[index + 1] == '=' && string[index + 2] == '\0'))
             ) {
