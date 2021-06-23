@@ -85,24 +85,36 @@ uint8_t *DecodeBase64(const uint8_t *string) {
 
     size_t index = 0;
     uint32_t storage = 0;
-    while (*string) {
+    while (string[4]) {
         storage |= DecodeChar(*string++) << 18;
         storage |= DecodeChar(*string++) << 12;
-        output[index++] = storage >> 16;
-
-        if (*string == '=') {
-            break;
-        }
         storage |= DecodeChar(*string++) << 6;
-        output[index++] = (uint8_t)(storage >> 8);
-
-        if (*string == '=') {
-            break;
-        }
         storage |= DecodeChar(*string++);
+
+        output[index++] = storage >> 16;
+        output[index++] = (uint8_t)(storage >> 8);
         output[index++] = (uint8_t)storage;
+
         storage = 0;
     }
+
+    storage |= DecodeChar(*string++) << 18;
+    storage |= DecodeChar(*string++) << 12;
+    output[index++] = storage >> 16;
+
+    if (*string == '=') {
+        output[index] = '\0';
+        return output;
+    }
+    storage |= DecodeChar(*string++) << 6;
+    output[index++] = (uint8_t)(storage >> 8);
+
+    if (*string == '=') {
+        output[index] = '\0';
+        return output;
+    }
+    storage |= DecodeChar(*string);
+    output[index++] = (uint8_t)storage;
 
     output[index] = '\0';
     return output;
