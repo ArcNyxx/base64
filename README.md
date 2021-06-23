@@ -4,6 +4,7 @@ A library to encode and decode binary or textual data as base64.
 Useful for:
 - basic authentication and jwt on the web
 - compact, swift, and human unreadable encoding
+- encode alternative data to send as text
 
 ## Philosophy
 Provide the fastest encode/decode functions possible which conform to the following criteria:

@@ -42,7 +42,8 @@ char *EncodeBase64(const char *string) {
     }
 
     size_t index = 0;
-    for (uint16_t storage = 0; *string; ) {
+    uint16_t storage = 0;
+    while (*string) {
         storage |= *string++;
         output[index++] = encodeMap[(storage >> 2) & 0x3F];
         storage <<= 8;
@@ -74,4 +75,28 @@ char *EncodeBase64(const char *string) {
     }
 
     return output;
+}
+
+char VerifyBase64(const char *string) {
+    size_t index = 0;
+    char temp = *string;
+    while (temp) {
+        if (!(
+            (temp >= 'A' && temp <= 'Z') ||
+            (temp >= 'a' && temp <= 'z') ||
+            (temp >= '0' && temp <= '9') ||
+            (temp == '-') ||
+            (temp == '_')
+        )) {
+            if (temp == '=' && 
+                (string[index + 1] == '\0' || // Only check further if not end
+                (string[index + 1] == '=' && string[index + 2] == '\0'))
+            ) {
+                return 1;
+            }
+            return 0;
+        }
+        temp = string[++index];
+    }
+    return 1;
 }

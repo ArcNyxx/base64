@@ -48,6 +48,8 @@ static const char *encodeMap =
 char *EncodeBase64(const char *string);
 char *DecodeBase64(const char *string);
 
+char VerifyBase64(const char *string);
+
 #else
 
 #include <string>
