@@ -32,3 +32,46 @@
 // WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 // OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#include "base64.h"
+
+char *EncodeBase64(const char *string) {
+    char *output;
+    if (!(output = malloc(1 + ((strlen(string) + 2) / 3 * 4)))) {
+        return (char *)0;
+    }
+
+    size_t index = 0;
+    for (uint16_t storage = 0; *string; ) {
+        storage |= *string++;
+        output[index++] = encodeMap[(storage >> 2) & 0x3F];
+        storage <<= 8;
+
+        storage |= *string++;
+        output[index++] = encodeMap[(storage >> 4) & 0x3F];
+
+        if (storage <<= 8) {
+            storage |= *string++;
+            output[index++] = encodeMap[(storage >> 6) & 0x3F];
+        } else {
+            break;
+        }
+
+        if (storage <<= 8) {
+            output[index++] = encodeMap[(storage >> 8) & 0x3F];
+        } else {
+            break;
+        }
+    }
+
+    if (index & 1) {
+        output[index] = '=';
+        output[index + 1] = '\0';
+    } else if (index & 2) {
+        output[index] = '=';
+        output[index + 1] = '=';
+        output[index + 2] = '\0';
+    }
+
+    return output;
+}
