@@ -1,5 +1,3 @@
-// BSD 4-Clause License
-
 // Copyright (c) 2021, FearlessDoggo21
 // All rights reserved.
 
@@ -33,29 +31,72 @@
 // OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef __cplusplus
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 
-static const char *encodeMap = 
+/*
+Base64URL encoding map
+*/
+static const uint8_t *encodeMap = 
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "abcdefghijklmnopqrstuvwxyz"
     "0123456789"
     "-_";
 
-char *EncodeBase64(const char *string);
-char *DecodeBase64(const char *string);
+/*
+Decoding function to reverse the encode map
 
-char VerifyBase64(const char *string);
+Remarks:
+    Does not check for invalid chars, nor does the main decode function
+    Run VerifyBase64 beforehand if the string may be invalid
+*/
+static uint8_t DecodeChar(const uint8_t ch) {
+    if (ch >= 'A' && ch <= 'Z') {
+        return ch - 'A';
+    } else if (ch >= 'a' && ch <= 'z') {
+        return ch - 'a' + 26;
+    } else if (ch >= '0' && ch <= '9') {
+        return ch - '0' + 52;
+    } else {
+        return 62 + (ch == '_');
+    }
+}
 
-#else
+/*
+Parameters:
+const uint8_t *string
+    The string to be encoded
 
-#include <string>
-#include <cstdint>
+Return Value (uint8_t *):
+    The base64 encoded string
 
-std::string EncodeBase64(const std::string &string);
-std::string DecodeBase64(const std::string &string);
+Remarks:
+    This function heap-allocates a memory buffer to store the encoded string.
+    This buffer has following length: 1 + (len(string) + 2) / 3 * 4
+*/
+uint8_t *EncodeBase64(const uint8_t *string);
 
-#endif
+/*
+Parameters:
+const uint8_t *string
+    The base64 encoded string the be decoded
+
+Return Value (uint8_t *):
+    The decoded string
+
+Remarks:
+    This function heap-allocates a memory buffer to store the decoded string.
+    This buffer has following length: 1 + len(string) / 4 * 3 - (# of '=')
+*/
+uint8_t *DecodeBase64(const uint8_t *string);
+
+/*
+Parameters:
+const uint8_t *string
+    The supposedly base64 encoded string
+
+Return Value (uint8_t):
+    A boolean value indicating if the input is base64 encoded
+*/
+uint8_t VerifyBase64(const uint8_t *string);

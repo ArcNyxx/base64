@@ -1,5 +1,3 @@
-// BSD 4-Clause License
-
 // Copyright (c) 2021, FearlessDoggo21
 // All rights reserved.
 
@@ -35,10 +33,10 @@
 
 #include "base64.h"
 
-char *EncodeBase64(const char *string) {
-    char *output;
-    if (!(output = malloc(1 + ((strlen(string) + 2) / 3 * 4)))) {
-        return (char *)0;
+uint8_t *EncodeBase64(const uint8_t *string) {
+    uint8_t *output;
+    if (!(output = malloc(1 + (((strlen(string) + 2) / 3) << 2)))) {
+        return (uint8_t *)0;
     }
 
     size_t index = 0;
@@ -77,9 +75,42 @@ char *EncodeBase64(const char *string) {
     return output;
 }
 
-char VerifyBase64(const char *string) {
+uint8_t *DecodeBase64(const uint8_t *string) {
+    uint8_t *output;
+    size_t length = strlen(string);
+    if (!(output = malloc(1 + (length >> 2) * 3 - (string[length - 1] == '=')
+            - (string[length - 2] == '=')))) {
+        return (uint8_t *)0;
+    }
+
     size_t index = 0;
-    char temp = *string;
+    uint32_t storage = 0;
+    while (*string) {
+        storage |= DecodeChar(*string++) << 18;
+        storage |= DecodeChar(*string++) << 12;
+        output[index++] = storage >> 16;
+
+        if (*string == '=') {
+            break;
+        }
+        storage |= DecodeChar(*string++) << 6;
+        output[index++] = (uint8_t)(storage >> 8);
+
+        if (*string == '=') {
+            break;
+        }
+        storage |= DecodeChar(*string++);
+        output[index++] = (uint8_t)storage;
+        storage = 0;
+    }
+
+    output[index] = '\0';
+    return output;
+}
+
+uint8_t VerifyBase64(const uint8_t *string) {
+    size_t index = 0;
+    uint8_t temp = *string;
     while (temp) {
         if (!(
             (temp >= 'A' && temp <= 'Z') ||
