@@ -31,6 +31,9 @@
 // OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#ifndef FEARLESSDOGGO21_BASE64_UTILS
+#define FEARLESSDOGGO21_BASE64_UTILS
+
 #include <stdint.h>
 
 /*
@@ -99,3 +102,5 @@ Return Value (uint8_t):
     A boolean value indicating if the input is base64 encoded
 */
 uint8_t VerifyBase64(const uint8_t *string);
+
+#endif
