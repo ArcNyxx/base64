@@ -33,6 +33,9 @@
 
 #include "base64.h"
 
+#include <string.h>
+#include <stdlib.h>
+
 uint8_t *EncodeBase64(const uint8_t *string) {
     uint8_t *output;
     if (!(output = malloc(1 + (((strlen(string) + 2) / 3) << 2)))) {
