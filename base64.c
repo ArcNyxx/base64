@@ -58,8 +58,10 @@ void EncodeBase64(const unsigned char *input, size_t length,
     *buffer++ = encodeMap[storage >> 18];
     if (!--length) {
         *buffer++ = encodeMap[(storage >> 12) & 0x3F];
+    #ifdef USE_EQUALS_SIGN_PADDING
         *buffer++ = '=';
         *buffer = '=';
+    #endif
         return;
     }
 
@@ -67,7 +69,9 @@ void EncodeBase64(const unsigned char *input, size_t length,
     *buffer++ = encodeMap[(storage >> 12) & 0x3F];
     if (!--length) {
         *buffer++ = encodeMap[(storage >> 6) & 0x3F];
+    #ifdef USE_EQUALS_SIGN_PADDING
         *buffer = '=';
+    #endif
         return;
     }
 
@@ -78,7 +82,9 @@ void EncodeBase64(const unsigned char *input, size_t length,
 
 void DecodeBase64(const unsigned char *input, size_t length,
         unsigned char *buffer) {
+#ifdef USE_EQUALS_SIGN_PADDING
     length -= (input[length - 1] == '=') + (input[length - 2] == '=');
+#endif
 
     uint32_t storage = 0;
     while (length >= 4) {
@@ -127,11 +133,13 @@ unsigned char VerifyBase64(const unsigned char *string, size_t length) {
             (temp == '-') ||
             (temp == '_')
         )) {
+        #ifdef USE_EQUALS_SIGN_PADDING
             if (temp == '=' && ((index + 1) == length ||
                 (string[index + 1] == '=' && (index + 2) == length))
             ) {
                 return 1;
             }
+        #endif
             return 0;
         }
     }

@@ -43,6 +43,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+// If `USE_EQUALS_SIGN_PADDING` is defined, equals sign padding will be placed
+// at the end of encoded strings to note an incomplete character bundle
+#define USE_EQUALS_SIGN_PADDING
+#undef USE_EQUALS_SIGN_PADDING
+
 // Base64 encode map, defaults to Base64URL
 static const unsigned char *encodeMap =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -65,6 +70,7 @@ static unsigned char DecodeChar(const unsigned char ch) {
     return 63 - (ch == '-');
 }
 
+#ifdef USE_EQUALS_SIGN_PADDING
 // Returns the length of a CString were it to be encoded in base64
 static inline size_t GetEncodedLength(const unsigned char *string) {
     return ((strlen(string) + 2) / 3) << 2;
@@ -76,6 +82,19 @@ static inline size_t GetDecodedLength(const unsigned char *string) {
     return (len >> 2) * 3 - (string[len - 1] == '=')
             - (string[len - 2] == '=');
 }
+#else
+// Returns the length of a CString were it to be encoded in base64
+static inline size_t GetEncodedLength(const unsigned char *string) {
+    size_t len = strlen(string);
+    return len + ((len + 2) / 3);
+}
+
+// Returns the length of a base64 encoded CString were it to be decoded
+static inline size_t GetDecodedLength(const unsigned char *string) {
+    size_t len = strlen(string);
+    return len - ((len + 2) >> 2);
+}
+#endif
 
 // Encodes characters in base64, outputting to a buffer
 // The buffer is assumed to be of proper length, made with `GetEncodedLength`
