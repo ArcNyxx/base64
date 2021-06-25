@@ -31,28 +31,27 @@
 // OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include <limits.h>
+#if UCHAR_MAX != 255
+#error "`unsigned char` does not hold 8 bits, FearlessDoggo21 Base64 Utils failure"
+#endif
+
 #ifndef FEARLESSDOGGO21_BASE64_UTILS
 #define FEARLESSDOGGO21_BASE64_UTILS
 
 #include <stdint.h>
+#include <stdlib.h>
 
-/*
-Base64URL encoding map
-*/
-static const uint8_t *encodeMap =
+// Base64 encode map, defaults to Base64URL
+static const unsigned char *encodeMap =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "abcdefghijklmnopqrstuvwxyz"
     "0123456789"
     "-_";
 
-/*
-Decoding function to reverse the encode map
-
-Remarks:
-    Does not check for invalid chars, nor does the main decode function
-    Run VerifyBase64 beforehand if the string may be invalid
-*/
-static uint8_t DecodeChar(const uint8_t ch) {
+// Decoding function to reverse ASCII offsets in encoding
+// Does not check for errors, returns 63 if unrecognised char
+static unsigned char DecodeChar(const unsigned char ch) {
     if (ch >= 'A' && ch <= 'Z') {
         return ch - 'A';
     }
@@ -65,42 +64,23 @@ static uint8_t DecodeChar(const uint8_t ch) {
     return 63 - (ch == '-');
 }
 
-/*
-Parameters:
-const uint8_t *string
-    The string to be encoded
+// Returns the length of a CString were it to be encoded in base64
+static inline size_t GetEncodedLength(const unsigned char *string);
 
-Return Value (uint8_t *):
-    The base64 encoded string
+// Returns the length of a base64 encoded CString were it to be decoded
+static inline size_t GetDecodedLength(const unsigned char *string);
 
-Remarks:
-    This function heap-allocates a memory buffer to store the encoded string.
-    This buffer has following length: 1 + (len(string) + 2) / 3 * 4
-*/
-uint8_t *EncodeBase64(const uint8_t *string);
+// Encodes characters in base64, outputting to a buffer
+// The buffer is assumed to be of proper length, made with `GetEncodedLength`
+unsigned char *EncodeBase64(const unsigned char *input, size_t length, 
+        const unsigned char *buffer);
 
-/*
-Parameters:
-const uint8_t *string
-    The base64 encoded string the be decoded
+// Decodes a base64 string, outputting to a buffer
+// The buffer is assumed to be of proper length, made with `GetDecodedLength`
+unsigned char *DecodeBase64(const unsigned char *input, size_t length, 
+        const unsigned char *buffer);
 
-Return Value (uint8_t *):
-    The decoded string
-
-Remarks:
-    This function heap-allocates a memory buffer to store the decoded string.
-    This buffer has following length: 1 + len(string) / 4 * 3 - (# of '=')
-*/
-uint8_t *DecodeBase64(const uint8_t *string);
-
-/*
-Parameters:
-const uint8_t *string
-    The supposedly base64 encoded string
-
-Return Value (uint8_t):
-    A boolean value indicating if the input is base64 encoded
-*/
-uint8_t VerifyBase64(const uint8_t *string);
+// Verifies whether the inputted string is properly encoded in base64
+unsigned char VerifyBase64(const unsigned char *string, size_t length);
 
 #endif

@@ -36,9 +36,19 @@
 #include <string.h>
 #include <stdlib.h>
 
+static inline size_t GetEncodedLength(const uint8_t *string) {
+    return ((strlen(string) + 2) / 3) << 2;
+}
+
+static inline size_t GetDecodedLength(const uint8_t *string) {
+    size_t len = strlen(string);
+    return (len >> 2) * 3 - (string[len - 1] == '=') 
+            - (string[len - 2] == '=');
+}
+
 uint8_t *EncodeBase64(const uint8_t *string) {
     uint8_t *output;
-    if (!(output = malloc(1 + (((strlen(string) + 2) / 3) << 2)))) {
+    if (!(output = malloc(1 + GetEncodedLength(string)))) {
         return (uint8_t *)0;
     }
 
