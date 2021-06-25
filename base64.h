@@ -87,8 +87,8 @@ void EncodeBase64(const unsigned char *input, size_t length,
 // The buffer is assumed to be of proper length, made with `GetDecodedLength`
 void DecodeBase64(const unsigned char *input, size_t length, 
         unsigned char *buffer);
-
+*/
 // Verifies whether the inputted string is properly encoded in base64
 unsigned char VerifyBase64(const unsigned char *string, size_t length);
-*/
+
 #endif

@@ -116,11 +116,11 @@ uint8_t *DecodeBase64(const uint8_t *string) {
     output[index] = '\0';
     return output;
 }
-
-uint8_t VerifyBase64(const uint8_t *string) {
-    size_t index = 0;
-    uint8_t temp = *string;
-    while (temp) {
+*/
+unsigned char VerifyBase64(const unsigned char *string, size_t length) {
+    unsigned char temp;
+    for (size_t index = 0; index < length; index++) {
+        temp = string[index];
         if (!(
             (temp >= 'A' && temp <= 'Z') ||
             (temp >= 'a' && temp <= 'z') ||
@@ -128,16 +128,13 @@ uint8_t VerifyBase64(const uint8_t *string) {
             (temp == '-') ||
             (temp == '_')
         )) {
-            if (temp == '=' &&
-                (string[index + 1] == '\0' || // Only check further if not end
-                (string[index + 1] == '=' && string[index + 2] == '\0'))
+            if (temp == '=' && ((index + 1) == length ||
+                (string[index + 1] == '=' && (index + 2) == length))
             ) {
                 return 1;
             }
             return 0;
         }
-        temp = string[++index];
     }
     return 1;
 }
-*/
