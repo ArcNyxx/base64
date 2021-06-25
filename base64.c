@@ -33,61 +33,45 @@
 
 #include "base64.h"
 
-#include <string.h>
-#include <stdlib.h>
+void EncodeBase64(const unsigned char *input, size_t length, 
+        unsigned char *buffer) {
+    uint32_t storage = 0;
+    while (length >= 3) {
+        storage |= (*input++) << 16;
+        storage |= (*input++) << 8;
+        storage |= *input++;
 
-static inline size_t GetEncodedLength(const uint8_t *string) {
-    return ((strlen(string) + 2) / 3) << 2;
-}
+        *buffer++ = encodeMap[storage >> 18];
+        *buffer++ = encodeMap[(storage >> 12) & 0x3F];
+        *buffer++ = encodeMap[(storage >> 6) & 0x3F];
+        *buffer++ = encodeMap[storage & 0x3F];
 
-static inline size_t GetDecodedLength(const uint8_t *string) {
-    size_t len = strlen(string);
-    return (len >> 2) * 3 - (string[len - 1] == '=') 
-            - (string[len - 2] == '=');
-}
-
-uint8_t *EncodeBase64(const uint8_t *string) {
-    uint8_t *output;
-    if (!(output = malloc(1 + GetEncodedLength(string)))) {
-        return (uint8_t *)0;
+        storage = 0;
+        length -= 3;
     }
 
-    size_t index = 0;
-    uint16_t storage = 0;
-    while (*string) {
-        storage |= *string++;
-        output[index++] = encodeMap[(storage >> 2) & 0x3F];
-        storage <<= 8;
-
-        storage |= *string++;
-        output[index++] = encodeMap[(storage >> 4) & 0x3F];
-
-        if (storage <<= 8) {
-            storage |= *string++;
-            output[index++] = encodeMap[(storage >> 6) & 0x3F];
-        } else {
-            break;
-        }
-
-        if (storage <<= 8) {
-            output[index++] = encodeMap[(storage >> 8) & 0x3F];
-        } else {
-            break;
-        }
+    storage |= (*input++) << 16;
+    *buffer++ = encodeMap[storage >> 18];
+    if (!--length) {
+        *buffer++ = encodeMap[(storage >> 12) & 0x3F];
+        *buffer++ = '=';
+        *buffer = '=';
+        return;
     }
 
-    if (index & 1) {
-        output[index] = '=';
-        output[index + 1] = '\0';
-    } else if (index & 2) {
-        output[index] = '=';
-        output[index + 1] = '=';
-        output[index + 2] = '\0';
+    storage |= (*input++) << 8;
+    *buffer++ = encodeMap[(storage >> 12) & 0x3F];
+    if (!--length) {
+        *buffer++ = encodeMap[(storage >> 6) & 0x3F];
+        *buffer = '=';
+        return;
     }
 
-    return output;
+    storage |= *input;
+    *buffer++ = encodeMap[(storage >> 6) & 0x3F];
+    *buffer = encodeMap[storage & 0x3F];
 }
-
+/*
 uint8_t *DecodeBase64(const uint8_t *string) {
     uint8_t *output;
     size_t length = strlen(string);
@@ -156,3 +140,4 @@ uint8_t VerifyBase64(const uint8_t *string) {
     }
     return 1;
 }
+*/

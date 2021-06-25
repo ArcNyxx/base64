@@ -41,6 +41,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Base64 encode map, defaults to Base64URL
 static const unsigned char *encodeMap =
@@ -65,22 +66,29 @@ static unsigned char DecodeChar(const unsigned char ch) {
 }
 
 // Returns the length of a CString were it to be encoded in base64
-static inline size_t GetEncodedLength(const unsigned char *string);
+static inline size_t GetEncodedLength(const unsigned char *string) {
+    return ((strlen(string) + 2) / 3) << 2;
+}
 
 // Returns the length of a base64 encoded CString were it to be decoded
-static inline size_t GetDecodedLength(const unsigned char *string);
+static inline size_t GetDecodedLength(const unsigned char *string) {
+    size_t len = strlen(string);
+    return (len >> 2) * 3 - (string[len - 1] == '=') 
+            - (string[len - 2] == '=');
+}
 
 // Encodes characters in base64, outputting to a buffer
 // The buffer is assumed to be of proper length, made with `GetEncodedLength`
-unsigned char *EncodeBase64(const unsigned char *input, size_t length, 
-        const unsigned char *buffer);
+void EncodeBase64(const unsigned char *input, size_t length, 
+        unsigned char *buffer);
 
+/*
 // Decodes a base64 string, outputting to a buffer
 // The buffer is assumed to be of proper length, made with `GetDecodedLength`
-unsigned char *DecodeBase64(const unsigned char *input, size_t length, 
-        const unsigned char *buffer);
+void DecodeBase64(const unsigned char *input, size_t length, 
+        unsigned char *buffer);
 
 // Verifies whether the inputted string is properly encoded in base64
 unsigned char VerifyBase64(const unsigned char *string, size_t length);
-
+*/
 #endif
