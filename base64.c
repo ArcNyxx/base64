@@ -33,7 +33,7 @@
 
 #include "base64.h"
 
-void EncodeBase64(const unsigned char *input, size_t length, 
+void EncodeBase64(const unsigned char *input, size_t length,
         unsigned char *buffer) {
     uint32_t storage = 0;
     while (length >= 3) {
@@ -48,6 +48,10 @@ void EncodeBase64(const unsigned char *input, size_t length,
 
         storage = 0;
         length -= 3;
+    }
+
+    if (!length) {
+        return;
     }
 
     storage |= (*input++) << 16;
@@ -71,52 +75,47 @@ void EncodeBase64(const unsigned char *input, size_t length,
     *buffer++ = encodeMap[(storage >> 6) & 0x3F];
     *buffer = encodeMap[storage & 0x3F];
 }
-/*
-uint8_t *DecodeBase64(const uint8_t *string) {
-    uint8_t *output;
-    size_t length = strlen(string);
-    if (!(output = malloc(1 + (length >> 2) * 3 - (string[length - 1] == '=')
-            - (string[length - 2] == '=')))) {
-        return (uint8_t *)0;
-    }
 
-    size_t index = 0;
+void DecodeBase64(const unsigned char *input, size_t length,
+        unsigned char *buffer) {
+    length -= (input[length - 1] == '=') + (input[length - 2] == '=');
+
     uint32_t storage = 0;
-    while (string[4]) {
-        storage |= DecodeChar(*string++) << 18;
-        storage |= DecodeChar(*string++) << 12;
-        storage |= DecodeChar(*string++) << 6;
-        storage |= DecodeChar(*string++);
+    while (length >= 4) {
+        storage |= DecodeChar(*input++) << 18;
+        storage |= DecodeChar(*input++) << 12;
+        storage |= DecodeChar(*input++) << 6;
+        storage |= DecodeChar(*input++);
 
-        output[index++] = storage >> 16;
-        output[index++] = (uint8_t)(storage >> 8);
-        output[index++] = (uint8_t)storage;
+        *buffer++ = storage >> 16;
+        *buffer++ = (unsigned char)(storage >> 8);
+        *buffer++ = (unsigned char)storage;
 
         storage = 0;
+        length -= 4;
     }
 
-    storage |= DecodeChar(*string++) << 18;
-    storage |= DecodeChar(*string++) << 12;
-    output[index++] = storage >> 16;
-
-    if (*string == '=') {
-        output[index] = '\0';
-        return output;
+    if (!length) {
+        return;
     }
-    storage |= DecodeChar(*string++) << 6;
-    output[index++] = (uint8_t)(storage >> 8);
 
-    if (*string == '=') {
-        output[index] = '\0';
-        return output;
+    storage |= DecodeChar(*input++) << 18;
+    storage |= DecodeChar(*input++) << 12;
+    *buffer++ = storage >> 16;
+    if (!(length - 2)) {
+        return;
     }
-    storage |= DecodeChar(*string);
-    output[index++] = (uint8_t)storage;
 
-    output[index] = '\0';
-    return output;
+    storage |= DecodeChar(*input++) << 6;
+    *buffer++ = (unsigned char)(storage >> 8);
+    if (!(length - 3)) {
+        return;
+    }
+
+    storage |= DecodeChar(*input) << 6;
+    *buffer = (unsigned char)storage;
 }
-*/
+
 unsigned char VerifyBase64(const unsigned char *string, size_t length) {
     unsigned char temp;
     for (size_t index = 0; index < length; index++) {

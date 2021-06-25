@@ -36,32 +36,36 @@
 #include <stdio.h>
 #include <string.h>
 
-int main(int argc, char *argv[]) {
+int main() {
     char *string = "NXBUwl^MYZVJi47a1*n22@iTCD-%Z3rM&YJoLU&9Ss6Y_T5*sW?ufI27iKN"
     "4Lst%@sA2N7&IX9dXl-D&^-A-B$7=i9dDNdg7ygcK#KBFT?A9T&h|k#=l=3699Rp1pPhJO+fx="
     "fdD^b0s%$i?EPBq$mqX9n3xr*OEMk3*!dbHu=Uy5nc3O9U3h4rCW&lk$EkZ!@XD6*d0Bj#==qb"
     "CnW*g=E0r^ItOIizy0SdMe32xh9xupKZsRwx7hj-YG!Wpc$d^";
 
-    char *buffer;
+    char *encode;
     size_t encodedLen = GetEncodedLength(string);
-    if (!(buffer = malloc(1 + encodedLen))) {
+    if (!(encode = malloc(1 + encodedLen))) {
         return 1;
     }
-    buffer[encodedLen] = '\0';
+    encode[encodedLen] = '\0';
 
-    EncodeBase64(string, strlen(string), buffer);
-    printf("Encoded:\n%s\n", buffer);
+    EncodeBase64(string, strlen(string), encode);
+    printf("Encoded:\n%s\n", encode);
 
-    char verified = VerifyBase64(buffer, encodedLen);
-
+    char verified = VerifyBase64(encode, encodedLen);
     printf("Verified:\n%s\n", verified ? "True" : "False");
-    /*
-    char verify = VerifyBase64(encode);
-    printf("Verified:\n%s\n", verify ? "True" : "False");
 
-    char *decode = DecodeBase64(encode);
+    char *decode;
+    size_t decodedLen = GetDecodedLength(encode);
+    if (!(decode = malloc(1 + decodedLen))) {
+        return 1;
+    }
+    decode[decodedLen] = '\0';
+
+    DecodeBase64(encode, encodedLen, decode);
     printf("Decoded:\n%s\n", decode);
     printf("Original:\n%s\n", string);
     printf("Correct:\n%s\n", strcmp(string, decode) ? "No" : "Yes");
-    */
+
+    return 0;
 }

@@ -73,21 +73,20 @@ static inline size_t GetEncodedLength(const unsigned char *string) {
 // Returns the length of a base64 encoded CString were it to be decoded
 static inline size_t GetDecodedLength(const unsigned char *string) {
     size_t len = strlen(string);
-    return (len >> 2) * 3 - (string[len - 1] == '=') 
+    return (len >> 2) * 3 - (string[len - 1] == '=')
             - (string[len - 2] == '=');
 }
 
 // Encodes characters in base64, outputting to a buffer
 // The buffer is assumed to be of proper length, made with `GetEncodedLength`
-void EncodeBase64(const unsigned char *input, size_t length, 
+void EncodeBase64(const unsigned char *input, size_t length,
         unsigned char *buffer);
 
-/*
 // Decodes a base64 string, outputting to a buffer
 // The buffer is assumed to be of proper length, made with `GetDecodedLength`
-void DecodeBase64(const unsigned char *input, size_t length, 
+void DecodeBase64(const unsigned char *input, size_t length,
         unsigned char *buffer);
-*/
+
 // Verifies whether the inputted string is properly encoded in base64
 unsigned char VerifyBase64(const unsigned char *string, size_t length);
 
