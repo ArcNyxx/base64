@@ -1,3 +1,5 @@
+BASE64_EXE_OUTPUT = test
+
 test: base64.c test.c
 	$(CC) base64.c test.c -o $(BASE64_EXE_OUTPUT)
 
