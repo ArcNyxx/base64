@@ -33,8 +33,7 @@
 
 #include "base64.h"
 
-void EncodeBase64(const unsigned char *input, size_t length,
-        unsigned char *buffer) {
+void EncodeBase64(const char *input, size_t length, char *buffer) {
     uint32_t storage = 0;
     while (length >= 3) {
         storage |= (*input++) << 16;
@@ -80,8 +79,7 @@ void EncodeBase64(const unsigned char *input, size_t length,
     *buffer = encodeMap[storage & 0x3F];
 }
 
-void DecodeBase64(const unsigned char *input, size_t length,
-        unsigned char *buffer) {
+void DecodeBase64(const char *input, size_t length, char *buffer) {
 #ifdef USE_EQUALS_SIGN_PADDING
     length -= (input[length - 1] == '=') + (input[length - 2] == '=');
 #endif
@@ -94,8 +92,8 @@ void DecodeBase64(const unsigned char *input, size_t length,
         storage |= DecodeChar(*input++);
 
         *buffer++ = storage >> 16;
-        *buffer++ = (unsigned char)(storage >> 8);
-        *buffer++ = (unsigned char)storage;
+        *buffer++ = (char)(storage >> 8);
+        *buffer++ = (char)storage;
 
         storage = 0;
         length -= 4;
@@ -113,25 +111,24 @@ void DecodeBase64(const unsigned char *input, size_t length,
     }
 
     storage |= DecodeChar(*input++) << 6;
-    *buffer++ = (unsigned char)(storage >> 8);
+    *buffer++ = (char)(storage >> 8);
     if (!(length - 3)) {
         return;
     }
 
     storage |= DecodeChar(*input) << 6;
-    *buffer = (unsigned char)storage;
+    *buffer = (char)storage;
 }
 
-unsigned char VerifyBase64(const unsigned char *string, size_t length) {
-    unsigned char temp;
+char VerifyBase64(const char *string, size_t length) {
+    char temp;
     for (size_t index = 0; index < length; index++) {
         temp = string[index];
         if (!(
             (temp >= 'A' && temp <= 'Z') ||
             (temp >= 'a' && temp <= 'z') ||
             (temp >= '0' && temp <= '9') ||
-            (temp == '-') ||
-            (temp == '_')
+            (temp == '-') || (temp == '_')
         )) {
         #ifdef USE_EQUALS_SIGN_PADDING
             if (temp == '=' && ((index + 1) == length ||
