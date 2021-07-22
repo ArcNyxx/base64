@@ -17,7 +17,7 @@ This disallows the use of both SIMD instructions and tricks based on memory endi
 ## Licensing
 The BSD 4-Clause “Original” or “Old” License has been used to license this project. \
 Using code from this repository in a separate project requires the following acknowledgment displayed in all advertising materials, including the project README if present:
-- This product includes the Base64 Utilities or a modified version, originally developed by FearlessDoggo21.
+- This product includes software developed by FearlessDoggo21.
 
 Even if the code is modified, this acknowledgment must be included. \
 The following is a non-exhaustive list of possible modifications:
