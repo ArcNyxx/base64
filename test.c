@@ -61,6 +61,11 @@ void DiffChars(const char *string, const char *compare, const size_t length) {
 }
 
 int main(int argc, char *argv[]) {
+    // Macros testing
+    // printf("%s\n", encodeMap);
+    // printf("%c %c\n", CHAR(ENCODE_MAP_CHAR_62),
+    //        CHAR(ENCODE_MAP_CHAR_63));
+
     const char *testDec = "NXBUwl^MYZVJi47a1*n22@iTCD-%Z3rM&YJoLU&9Ss6Y_T5*sW?ufI27iKN"
     "4Lst%@sA2N7&IX9dXl-D&^-A-B$7=i9dDNdg7ygcK#KBFT?A9T&h|k#=l=3699Rp1pPhJO+fx="
     "fdD^b0s%$i?EPBq$mqX9n3xr*OEMk3*!dbHu=Uy5nc3O9U3h4rCW&lk$EkZ!@XD6*d0Bj#==qb"

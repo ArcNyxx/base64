@@ -50,12 +50,21 @@
 #define USE_EQUALS_SIGN_PADDING
 // #undef USE_EQUALS_SIGN_PADDING
 
+#define _STRING(x) #x
+#define STRING(x)  _STRING(x)
+#define CHAR(x)    *_STRING(x)
+
 // Base64 encode map, defaults to Base64URL
-static const char *encodeMap =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "abcdefghijklmnopqrstuvwxyz"
-    "0123456789"
-    "-_";
+#define ENCODE_MAP_CHAR_62 -
+#define ENCODE_MAP_CHAR_63 _
+#define ENCODE_MAP               \
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ" \
+    "abcdefghijklmnopqrstuvwxyz" \
+    "0123456789"                 \
+    STRING(ENCODE_MAP_CHAR_62)   \
+    STRING(ENCODE_MAP_CHAR_63)
+
+static const char *encodeMap = ENCODE_MAP;
 
 // Decoding function to reverse ASCII offsets in encoding
 // Does not check for errors, returns 63 if unrecognised char

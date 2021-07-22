@@ -130,7 +130,8 @@ char VerifyBase64(const char *string, size_t length) {
             (temp >= 'A' && temp <= 'Z') ||
             (temp >= 'a' && temp <= 'z') ||
             (temp >= '0' && temp <= '9') ||
-            (temp == '-') || (temp == '_')
+            (temp == CHAR(ENCODE_MAP_CHAR_62)) ||
+            (temp == CHAR(ENCODE_MAP_CHAR_63))
         )) {
         #ifdef USE_EQUALS_SIGN_PADDING
             if (temp == '=' && ((index + 1) == length ||
