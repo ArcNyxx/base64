@@ -51,8 +51,8 @@
 // #undef USE_EQUALS_SIGN_PADDING
 
 #define _STRING(x) #x
-#define STRING(x)  _STRING(x)
-#define CHAR(x)    *_STRING(x)
+#define STRING(x) _STRING(x)
+#define CHAR(x) *_STRING(x)
 
 // Base64 encode map, defaults to Base64URL
 #define ENCODE_MAP_CHAR_62 -

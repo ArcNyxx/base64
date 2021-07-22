@@ -33,11 +33,11 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
 
-#include "base64.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "base64.h"
 
 void DiffChars(const char *string, const char *compare, const size_t length) {
     if (!length) {
