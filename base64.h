@@ -36,8 +36,8 @@
 #error "`char` type does not hold 8 bits, FearlessDoggo21 Base64 Utils failure"
 #endif
 
-#ifndef FEARLESSDOGGO21_BASE64_UTILS
-#define FEARLESSDOGGO21_BASE64_UTILS
+#ifndef BASE64_H
+#define BASE64_H
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -46,7 +46,7 @@
 // If `USE_EQUALS_SIGN_PADDING` is defined, equals sign padding will be placed
 // at the end of encoded strings to note an incomplete character bundle
 #define USE_EQUALS_SIGN_PADDING
-#undef USE_EQUALS_SIGN_PADDING
+// #undef USE_EQUALS_SIGN_PADDING
 
 // Base64 encode map, defaults to Base64URL
 static const char *encodeMap =
@@ -72,27 +72,24 @@ static char DecodeChar(const char ch) {
 
 #ifdef USE_EQUALS_SIGN_PADDING
 // Returns the length of a CString were it to be encoded in base64
-static inline size_t GetEncodedLength(const char *string) {
-    return ((strlen(string) + 2) / 3) << 2;
+static inline size_t GetEncodedLength(const size_t length) {
+    return ((length + 2) / 3) << 2;
 }
 
 // Returns the length of a base64 encoded CString were it to be decoded
-static inline size_t GetDecodedLength(const char *string) {
-    size_t len = strlen(string);
-    return (len >> 2) * 3 - (string[len - 1] == '=')
-            - (string[len - 2] == '=');
+static inline size_t GetDecodedLength(const char *string, const size_t length) {
+    return (length >> 2) * 3 - (string[length - 1] == '=')
+            - (string[length - 2] == '=');
 }
 #else
 // Returns the length of a CString were it to be encoded in base64
-static inline size_t GetEncodedLength(const char *string) {
-    size_t len = strlen(string);
-    return len + ((len + 2) / 3);
+static inline size_t GetEncodedLength(const size_t length) {
+    return length + ((length + 2) / 3);
 }
 
 // Returns the length of a base64 encoded CString were it to be decoded
-static inline size_t GetDecodedLength(const char *string) {
-    size_t len = strlen(string);
-    return len - ((len + 2) >> 2);
+static inline size_t GetDecodedLength(const size_t length) {
+    return length - ((length + 2) >> 2);
 }
 #endif
 

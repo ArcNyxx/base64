@@ -58,7 +58,7 @@ void DiffChars(const char *string, const char *compare, const size_t length) {
     printf("\x1b[m\n");
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     const char *testDec = "NXBUwl^MYZVJi47a1*n22@iTCD-%Z3rM&YJoLU&9Ss6Y_T5*sW?ufI27iKN"
     "4Lst%@sA2N7&IX9dXl-D&^-A-B$7=i9dDNdg7ygcK#KBFT?A9T&h|k#=l=3699Rp1pPhJO+fx="
     "fdD^b0s%$i?EPBq$mqX9n3xr*OEMk3*!dbHu=Uy5nc3O9U3h4rCW&lk$EkZ!@XD6*d0Bj#==qb"
@@ -70,8 +70,8 @@ int main() {
     "4cipPRU1rMyohZGJIdT1VeTVuYzNPOVUzaDRyQ1cmbGskRWtaIUBYRDYqZDBCaiM9PXFiQ25XK"
     "mc9RTByXkl0T0lpenkwU2RNZTMyeGg5eHVwS1pzUnd4N2hqLVlHIVdwYyRkXg==";
 
-    size_t lenEnc = GetEncodedLength(testDec);
-    size_t lenDec = GetDecodedLength(testEnc);
+    size_t lenEnc = GetEncodedLength(strlen(testDec));
+    size_t lenDec = GetDecodedLength(testEnc, strlen(testEnc));
 
     char encode[lenEnc + 1];
     EncodeBase64(testDec, lenDec, encode);
@@ -106,6 +106,10 @@ int main() {
         printf("\x1b[1m\x1b[32mTesting success!\x1b[m\n");
     } else {
         printf("\x1b[1m\x1b[31mTesting failure!\x1b[m\n");
+    }
+
+    if (argc == 2 && !strcmp(argv[1], "-v")) {
+        printf("\n%s\n%s\n%s\n%s\n", encode, testEnc, decode, testDec);
     }
 
     return 0;
