@@ -35,18 +35,16 @@
 
 #include <limits.h>
 #if UCHAR_MAX != 255
-#error "`char` type does not hold 8 bits, FearlessDoggo21 Base64 Utils failure"
+#error `char` type does not hold 8 bits.
 #endif
 
 #ifndef BASE64_H
 #define BASE64_H
 
-#include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 
-// If `USE_EQUALS_SIGN_PADDING` is defined, equals sign padding will be placed
-// at the end of encoded strings to note an incomplete character bundle
+// If `USE_EQUALS_SIGN_PADDING` is defined, equals signs will be
+// appended to encoded strings for incomplete character bundles
 #define USE_EQUALS_SIGN_PADDING
 // #undef USE_EQUALS_SIGN_PADDING
 
@@ -55,6 +53,8 @@
 #define CHAR(x) *_STRING(x)
 
 // Base64 encode map, defaults to Base64URL
+// Change the characters within the macros to alternate or completely
+// change encodings
 #define ENCODE_MAP_CHAR_62 -
 #define ENCODE_MAP_CHAR_63 _
 #define ENCODE_MAP               \
@@ -68,7 +68,7 @@ static const char *encodeMap = ENCODE_MAP;
 
 // Decoding function to reverse ASCII offsets in encoding
 // Does not check for errors, returns 63 if unrecognised char
-static char DecodeChar(const char ch) {
+char DecodeChar(const char ch) {
     if (ch >= 'A' && ch <= 'Z') {
         return ch - 'A';
     }
@@ -78,38 +78,39 @@ static char DecodeChar(const char ch) {
     if (ch >= '0' && ch <= '9') {
         return ch - '0' + 52;
     }
-    return 63 - (ch == '-');
+    return 63 - (ch == CHAR(ENCODE_MAP_CHAR_62));
 }
 
 #ifdef USE_EQUALS_SIGN_PADDING
-// Returns the length of a CString were it to be encoded in base64
+// Returns the length of a base64 encoded string with padding
 static inline size_t GetEncodedLength(const size_t length) {
     return ((length + 2) / 3) << 2;
 }
 
-// Returns the length of a base64 encoded CString were it to be decoded
-static inline size_t GetDecodedLength(const char *string, const size_t length) {
+// Returns the length of a decoded base64 string with padding
+static inline size_t GetDecodedLength(const char *string, 
+        const size_t length) {
     return (length >> 2) * 3 - (string[length - 1] == '=')
             - (string[length - 2] == '=');
 }
 #else
-// Returns the length of a CString were it to be encoded in base64
+// Returns the length of a base64 encoded string without padding
 static inline size_t GetEncodedLength(const size_t length) {
     return length + ((length + 2) / 3);
 }
 
-// Returns the length of a base64 encoded CString were it to be decoded
+// Returns the length of a decoded base64 string without padding
 static inline size_t GetDecodedLength(const size_t length) {
     return length - ((length + 2) >> 2);
 }
 #endif
 
-// Encodes characters in base64, outputting to a buffer
-// The buffer is assumed to be of proper length, made with `GetEncodedLength`
+// Encodes characters in base64, outputting to a buffer assumed to be
+// of proper length, as defined by `GetEncodedLength`
 void EncodeBase64(const char *input, size_t length, char *buffer);
 
-// Decodes a base64 string, outputting to a buffer
-// The buffer is assumed to be of proper length, made with `GetDecodedLength`
+// Decodes a base64 string, outputting to a buffer assumed to be of
+// proper length, as defined by `GetDecodedLength`
 void DecodeBase64(const char *input, size_t length, char *buffer);
 
 // Verifies whether the inputted string is properly encoded in base64

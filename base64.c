@@ -83,7 +83,8 @@ void EncodeBase64(const char *input, size_t length, char *buffer) {
 
 void DecodeBase64(const char *input, size_t length, char *buffer) {
 #ifdef USE_EQUALS_SIGN_PADDING
-    length -= (input[length - 1] == '=') + (input[length - 2] == '=');
+    length -= (input[length - 1] == '=')
+            + (input[length - 2] == '=');
 #endif
 
     uint32_t storage = 0;

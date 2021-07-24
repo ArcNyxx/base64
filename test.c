@@ -39,7 +39,8 @@
 
 #include "base64.h"
 
-void DiffChars(const char *string, const char *compare, const size_t length) {
+void DiffChars(const char *string, const char *compare, 
+        const size_t length) {
     if (!length) {
         return;
     }
