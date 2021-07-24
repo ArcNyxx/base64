@@ -67,16 +67,29 @@ int main(int argc, char *argv[]) {
     // printf("%c %c\n", CHAR(ENCODE_MAP_CHAR_62),
     //        CHAR(ENCODE_MAP_CHAR_63));
 
-    const char *testDec = "NXBUwl^MYZVJi47a1*n22@iTCD-%Z3rM&YJoLU&9Ss6Y_T5*sW?ufI27iKN"
-    "4Lst%@sA2N7&IX9dXl-D&^-A-B$7=i9dDNdg7ygcK#KBFT?A9T&h|k#=l=3699Rp1pPhJO+fx="
-    "fdD^b0s%$i?EPBq$mqX9n3xr*OEMk3*!dbHu=Uy5nc3O9U3h4rCW&lk$EkZ!@XD6*d0Bj#==qb"
-    "CnW*g=E0r^ItOIizy0SdMe32xh9xupKZsRwx7hj-YG!Wpc$d^";
+    const char *testDec = "NXBUwl^MYZVJi47a1*n22@iTCD-%Z3rM&YJoLU&9S"
+    "s6Y_T5*sW?ufI27iKN4Lst%@sA2N7&IX9dXl-D&^-A-B$7=i9dDNdg7ygcK#KBF"
+    "T?A9T&h|k#=l=3699Rp1pPhJO+fx=fdD^b0s%$i?EPBq$mqX9n3xr*OEMk3*!db"
+    "Hu=Uy5nc3O9U3h4rCW&lk$EkZ!@XD6*d0Bj#==qbCnW*g=E0r^ItOIizy0SdMe3"
+    "2xh9xupKZsRwx7hj-YG!Wpc$d^";
 
-    const char *testEnc = "TlhCVXdsXk1ZWlZKaTQ3YTEqbjIyQGlUQ0QtJVozck0mWUpvTFUmOVNzNll"
-    "fVDUqc1c_dWZJMjdpS040THN0JUBzQTJONyZJWDlkWGwtRCZeLUEtQiQ3PWk5ZEROZGc3eWdjS"
-    "yNLQkZUP0E5VCZofGsjPWw9MzY5OVJwMXBQaEpPK2Z4PWZkRF5iMHMlJGk_RVBCcSRtcVg5bjN"
-    "4cipPRU1rMyohZGJIdT1VeTVuYzNPOVUzaDRyQ1cmbGskRWtaIUBYRDYqZDBCaiM9PXFiQ25XK"
-    "mc9RTByXkl0T0lpenkwU2RNZTMyeGg5eHVwS1pzUnd4N2hqLVlHIVdwYyRkXg==";
+#ifdef USE_EQUALS_SIGN_PADDING
+    const char *testEnc = "TlhCVXdsXk1ZWlZKaTQ3YTEqbjIyQGlUQ0QtJVozc"
+    "k0mWUpvTFUmOVNzNllfVDUqc1c" STRING(ENCODE_MAP_CHAR_63) "dWZJMjd"
+    "pS040THN0JUBzQTJONyZJWDlkWGwtRCZeLUEtQiQ3PWk5ZEROZGc3eWdjSyNLQk"
+    "ZUP0E5VCZofGsjPWw9MzY5OVJwMXBQaEpPK2Z4PWZkRF5iMHMlJGk"
+    STRING(ENCODE_MAP_CHAR_63) "RVBCcSRtcVg5bjN4cipPRU1rMyohZGJIdT1V"
+    "eTVuYzNPOVUzaDRyQ1cmbGskRWtaIUBYRDYqZDBCaiM9PXFiQ25XKmc9RTByXkl"
+    "0T0lpenkwU2RNZTMyeGg5eHVwS1pzUnd4N2hqLVlHIVdwYyRkXg==";
+#else
+    const char *testEnc = "TlhCVXdsXk1ZWlZKaTQ3YTEqbjIyQGlUQ0QtJVozc"
+    "k0mWUpvTFUmOVNzNllfVDUqc1c" STRING(ENCODE_MAP_CHAR_63) "dWZJMjd"
+    "pS040THN0JUBzQTJONyZJWDlkWGwtRCZeLUEtQiQ3PWk5ZEROZGc3eWdjSyNLQk"
+    "ZUP0E5VCZofGsjPWw9MzY5OVJwMXBQaEpPK2Z4PWZkRF5iMHMlJGk"
+    STRING(ENCODE_MAP_CHAR_63) "RVBCcSRtcVg5bjN4cipPRU1rMyohZGJIdT1V"
+    "eTVuYzNPOVUzaDRyQ1cmbGskRWtaIUBYRDYqZDBCaiM9PXFiQ25XKmc9RTByXkl"
+    "0T0lpenkwU2RNZTMyeGg5eHVwS1pzUnd4N2hqLVlHIVdwYyRkXg";
+#endif
 
     size_t lenEnc = GetEncodedLength(strlen(testDec));
     size_t lenDec = GetDecodedLength(testEnc, strlen(testEnc));
@@ -86,10 +99,12 @@ int main(int argc, char *argv[]) {
     encode[lenEnc] = 0;
 
     char verify = VerifyBase64(encode, lenEnc);
-    printf("Encoded string \x1b[1m%s\x1b[m valid.\n", verify ? "is" : "is not");
+    printf("Encoded string \x1b[1m%s\x1b[m valid.\n", 
+            verify ? "is" : "is not");
 
     char encoded = strcmp(encode, testEnc);
-    printf("Encoded string \x1b[1m%s\x1b[m correct.\n", encoded ? "is not" : "is");
+    printf("Encoded string \x1b[1m%s\x1b[m correct.\n", 
+            encoded ? "is not" : "is");
     if (encoded) {
         // Testing for DiffChars function
         // memcpy(encode + 12, "aweouhwaeunaeriuanero", 21);
@@ -104,7 +119,8 @@ int main(int argc, char *argv[]) {
     decode[lenDec] = 0;
 
     char decoded = strcmp(decode, testDec);
-    printf("Decoded string \x1b[1m%s\x1b[m correct.\n", decoded ? "is not" : "is");
+    printf("Decoded string \x1b[1m%s\x1b[m correct.\n", 
+            decoded ? "is not" : "is");
     if (decoded) {
         DiffChars(decode, testDec, lenDec);
         printf("%s\n", testDec);
@@ -117,7 +133,8 @@ int main(int argc, char *argv[]) {
     }
 
     if (argc == 2 && !strcmp(argv[1], "-v")) {
-        printf("\n%s\n%s\n%s\n%s\n", encode, testEnc, decode, testDec);
+        printf("\n%s\n%s\n%s\n%s\n", 
+                encode, testEnc, decode, testDec);
     }
 
     return 0;

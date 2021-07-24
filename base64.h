@@ -66,21 +66,6 @@
 
 static const char *encodeMap = ENCODE_MAP;
 
-// Decoding function to reverse ASCII offsets in encoding
-// Does not check for errors, returns 63 if unrecognised char
-char DecodeChar(const char ch) {
-    if (ch >= 'A' && ch <= 'Z') {
-        return ch - 'A';
-    }
-    if (ch >= 'a' && ch <= 'z') {
-        return ch - 'a' + 26;
-    }
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0' + 52;
-    }
-    return 63 - (ch == CHAR(ENCODE_MAP_CHAR_62));
-}
-
 #ifdef USE_EQUALS_SIGN_PADDING
 // Returns the length of a base64 encoded string with padding
 static inline size_t GetEncodedLength(const size_t length) {
@@ -104,6 +89,10 @@ static inline size_t GetDecodedLength(const size_t length) {
     return length - ((length + 2) >> 2);
 }
 #endif
+
+// Decoding function to reverse ASCII offsets in encoding
+// Does not check for errors, returns 63 if unrecognised char
+char DecodeChar(const char ch);
 
 // Encodes characters in base64, outputting to a buffer assumed to be
 // of proper length, as defined by `GetEncodedLength`

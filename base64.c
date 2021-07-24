@@ -33,7 +33,22 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
 
+#include <stdint.h>
+
 #include "base64.h"
+
+char DecodeChar(const char ch) {
+    if (ch >= 'A' && ch <= 'Z') {
+        return ch - 'A';
+    }
+    if (ch >= 'a' && ch <= 'z') {
+        return ch - 'a' + 26;
+    }
+    if (ch >= '0' && ch <= '9') {
+        return ch - '0' + 52;
+    }
+    return 63 - (ch == CHAR(ENCODE_MAP_CHAR_62));
+}
 
 void EncodeBase64(const char *input, size_t length, char *buffer) {
     uint32_t storage = 0;
