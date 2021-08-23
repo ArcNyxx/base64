@@ -30,6 +30,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include <ctype.h>
 #include <stdint.h>
 
 #include "base64.h"
@@ -140,9 +141,7 @@ char VerifyBase64(const char *string, size_t length) {
     for (size_t index = 0; index < length; index++) {
         temp = string[index];
         if (!(
-            (temp >= 'A' && temp <= 'Z') ||
-            (temp >= 'a' && temp <= 'z') ||
-            (temp >= '0' && temp <= '9') ||
+            isalnum(temp) ||
             (temp == CHAR(ENCODE_MAP_CHAR_62)) ||
             (temp == CHAR(ENCODE_MAP_CHAR_63))
         )) {
