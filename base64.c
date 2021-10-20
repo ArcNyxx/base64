@@ -1,159 +1,127 @@
-// Copyright (c) 2021 FearlessDoggo21
-//
-// Redistribution and use in source and binary forms, with or
-// without modification, are permitted provided that the following
-// conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above
-// copyright notice, this list of conditions and the following
-// disclaimer in the documentation and/or other materials provided
-// with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its
-// contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-// CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-// INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-// OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-// NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-// ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+/* see LICENCE file for licensing info */
+/* base64 - simple encoding library */
 #include <ctype.h>
 #include <stdint.h>
 
 #include "base64.h"
 
-char DecodeChar(const char ch) {
-    if (ch >= 'A' && ch <= 'Z') {
-        return ch - 'A';
-    }
-    if (ch >= 'a' && ch <= 'z') {
-        return ch - 'a' + 26;
-    }
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0' + 52;
-    }
-    return 63 - (ch == CHAR(ENCODE_MAP_CHAR_62));
+char
+decode_char(const char ch) {
+	if (ch >= 'A' && ch <= 'Z')
+		return ch - 'A';
+	if (ch >= 'a' && ch <= 'z')
+		return ch - 'a' + 26;
+	if (ch >= '0' && ch <= '9')
+		return ch - '0' + 52;
+	return 63 - (ch == CHAR(ENCODE_MAP_CHAR_62));
 }
 
-void EncodeBase64(const char *input, size_t length, char *buffer) {
-    uint32_t storage = 0;
-    while (length >= 3) {
-        storage |= (*input++) << 16;
-        storage |= (*input++) << 8;
-        storage |= *input++;
+void
+encode_base64(const char *restrict input,
+	size_t length, char *restrict buffer) {
+	uint32_t storage = 0;
+	while (length >= 3) {
+		storage |= (*input++) << 16;
+		storage |= (*input++) << 8;
+		storage |= *input++;
 
-        *buffer++ = encodeMap[storage >> 18];
-        *buffer++ = encodeMap[(storage >> 12) & 0x3F];
-        *buffer++ = encodeMap[(storage >> 6) & 0x3F];
-        *buffer++ = encodeMap[storage & 0x3F];
+		*buffer++ = encodeMap[storage >> 18];
+		*buffer++ = encodeMap[(storage >> 12) & 0x3F];
+		*buffer++ = encodeMap[(storage >> 6) & 0x3F];
+		*buffer++ = encodeMap[storage & 0x3F];
 
-        storage = 0;
-        length -= 3;
-    }
+		storage = 0;
+		length -= 3;
+	}
 
-    if (!length) {
-        return;
-    }
+	if (!length)
+		return;
 
-    storage |= (*input++) << 16;
-    *buffer++ = encodeMap[storage >> 18];
-    if (!--length) {
-        *buffer++ = encodeMap[(storage >> 12) & 0x3F];
-    #ifdef USE_EQUALS_SIGN_PADDING
-        *buffer++ = '=';
-        *buffer = '=';
-    #endif
-        return;
-    }
+	storage |= (*input++) << 16;
+	*buffer++ = encodeMap[storage >> 18];
+	if (!--length) {
+		*buffer++ = encodeMap[(storage >> 12) & 0x3F];
+	#ifdef USE_EQUALS_SIGN_PADDING
+		*buffer++ = '=';
+		*buffer = '=';
+	#endif
+		return;
+	}
 
-    storage |= (*input++) << 8;
-    *buffer++ = encodeMap[(storage >> 12) & 0x3F];
-    if (!--length) {
-        *buffer++ = encodeMap[(storage >> 6) & 0x3F];
-    #ifdef USE_EQUALS_SIGN_PADDING
-        *buffer = '=';
-    #endif
-        return;
-    }
+	storage |= (*input++) << 8;
+	*buffer++ = encodeMap[(storage >> 12) & 0x3F];
+	if (!--length) {
+		*buffer++ = encodeMap[(storage >> 6) & 0x3F];
+	#ifdef USE_EQUALS_SIGN_PADDING
+		*buffer = '=';
+	#endif
+		return;
+	}
 
-    storage |= *input;
-    *buffer++ = encodeMap[(storage >> 6) & 0x3F];
-    *buffer = encodeMap[storage & 0x3F];
+	storage |= *input;
+	*buffer++ = encodeMap[(storage >> 6) & 0x3F];
+	*buffer = encodeMap[storage & 0x3F];
 }
 
-void DecodeBase64(const char *input, size_t length, char *buffer) {
+void
+decode_base64(const char *restrict input,
+	size_t length, char *restrict buffer) {
 #ifdef USE_EQUALS_SIGN_PADDING
-    length -= (input[length - 1] == '=')
-            + (input[length - 2] == '=');
+	length -= (input[length - 1] == '=')
+			+ (input[length - 2] == '=');
 #endif
 
-    uint32_t storage = 0;
-    while (length >= 4) {
-        storage |= DecodeChar(*input++) << 18;
-        storage |= DecodeChar(*input++) << 12;
-        storage |= DecodeChar(*input++) << 6;
-        storage |= DecodeChar(*input++);
+	uint32_t storage = 0;
+	while (length >= 4) {
+		storage |= decode_char(*input++) << 18;
+		storage |= decode_char(*input++) << 12;
+		storage |= decode_char(*input++) << 6;
+		storage |= decode_char(*input++);
 
-        *buffer++ = storage >> 16;
-        *buffer++ = (char)(storage >> 8);
-        *buffer++ = (char)storage;
+		*buffer++ = storage >> 16;
+		*buffer++ = (char)(storage >> 8);
+		*buffer++ = (char)storage;
 
-        storage = 0;
-        length -= 4;
-    }
+		storage = 0;
+		length -= 4;
+	}
 
-    if (!length) {
-        return;
-    }
+	if (!length)
+		return;
 
-    storage |= DecodeChar(*input++) << 18;
-    storage |= DecodeChar(*input++) << 12;
-    *buffer++ = storage >> 16;
-    if (!(length - 2)) {
-        return;
-    }
+	storage |= decode_char(*input++) << 18;
+	storage |= decode_char(*input++) << 12;
+	*buffer++ = storage >> 16;
+	if (!(length - 2))
+		return;
 
-    storage |= DecodeChar(*input++) << 6;
-    *buffer++ = (char)(storage >> 8);
-    if (!(length - 3)) {
-        return;
-    }
+	storage |= decode_char(*input++) << 6;
+	*buffer++ = (char)(storage >> 8);
+	if (!(length - 3))
+		return;
 
-    storage |= DecodeChar(*input) << 6;
-    *buffer = (char)storage;
+	storage |= decode_char(*input) << 6;
+	*buffer = (char)storage;
 }
 
-char VerifyBase64(const char *string, size_t length) {
-    char temp;
-    for (size_t index = 0; index < length; index++) {
-        temp = string[index];
-        if (!(
-            isalnum(temp) ||
-            (temp == CHAR(ENCODE_MAP_CHAR_62)) ||
-            (temp == CHAR(ENCODE_MAP_CHAR_63))
-        )) {
-        #ifdef USE_EQUALS_SIGN_PADDING
-            if (temp == '=' && ((index + 1) == length ||
-                (string[index + 1] == '=' && (index + 2) == length))
-            ) {
-                return 1;
-            }
-        #endif
-            return 0;
-        }
-    }
-    return 1;
+char
+verify_base64(const char *string, size_t length) {
+	char temp;
+	for (size_t index = 0; index < length; index++) {
+		temp = string[index];
+		if (!(
+			isalnum(temp) ||
+			(temp == CHAR(ENCODE_MAP_CHAR_62)) ||
+			(temp == CHAR(ENCODE_MAP_CHAR_63))
+		)) {
+		#ifdef USE_EQUALS_SIGN_PADDING
+			if (temp == '=' && ((index + 1) == length ||
+				(string[index + 1] == '=' && (index + 2) == length))
+			)
+				return 1;
+		#endif
+			return 0;
+		}
+	}
+	return 1;
 }

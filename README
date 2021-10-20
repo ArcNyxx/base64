@@ -1,0 +1,17 @@
+base64
+======
+
+base64 is a small code library for simply encoding and decoding binary data to
+and from a printable format.
+
+philosophy
+----------
+
+Created to be the fastest base64 encoder/decoder which conforms to the
+following criteria:
+- readable by programmers of any skill level
+- easily translatable into other programming languages
+- cross-platform and system
+
+Such criteria disallow things like SIMD or endianness checking, rendering this
+codebase subpar for any heavy-duty application
