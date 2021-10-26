@@ -1,4 +1,7 @@
+# base64 - simple encoding library
+# Copyright (C) 2021 FearlessDoggo21
 # see LICENCE file for licensing information
+
 # base64 version
 VERSION = 0.1.1
 

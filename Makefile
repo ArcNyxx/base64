@@ -1,5 +1,7 @@
-# see LICENCE file for licensing information
 # base64 - simple encoding library
+# Copyright (C) 2021 FearlessDoggo21
+# see LICENCE file for licensing information
+
 .POSIX:
 
 include config.mk
@@ -47,6 +49,7 @@ install: base64.so
 	cp -f base64.h $(DESTDIR)$(PREFIX)/include
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/lib/base64.so
+	rm -f $(DESTDIR)$(PREFIX)/lib/base64.so \
+		$(DESTDIR)$(PREFIX)/include/base64.h
 
 .PHONY: all test options clean dist install uninstall

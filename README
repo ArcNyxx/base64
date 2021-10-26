@@ -14,4 +14,4 @@ following criteria:
 - cross-platform and system
 
 Such criteria disallow things like SIMD or endianness checking, rendering this
-codebase subpar for any heavy-duty application
+codebase subpar for any heavy-duty application.
