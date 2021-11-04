@@ -1,5 +1,9 @@
-/* see LICENCE file for licensing information */
-/* base64 - simple encoding library */
+/*
+ * base64 - simple encoding library
+ * Copyright (C) 2021 FearlessDoggo21
+ * see LICENCE file for licensing information
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
