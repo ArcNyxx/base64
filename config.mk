@@ -12,5 +12,5 @@ WPROFILE = -Wall -Wextra -Wmissing-prototypes -Wstrict-prototypes \
 -Wcast-qual -Wshadow -Wwrite-strings -Wno-unused-parameter -Wfloat-equal
 STD = -D_POSIX_C_SOURCE=200809L
 
-CFLAGS = $(WPROFILE) $(STD) -Os -DVERSION=\"$(VERSION)\"
-LDFLAGS =
+CFLAGS = $(WPROFILE) $(STD) -fpic -Os -DVERSION=\"$(VERSION)\"
+LDFLAGS = -shared
