@@ -25,7 +25,8 @@ clean:
 
 dist: clean
 	mkdir -p base64-$(VERSION)
-	cp -R LICENCE README Makefile config.mk $(SRC) $(HEAD) base64-$(VERSION)
+	cp -R LICENCE README Makefile config.mk \
+		$(SRC) $(HEAD) test.c base64-$(VERSION)
 	tar -cf base64-$(VERSION).tar base64-$(VERSION)
 	gzip base64-$(VERSION).tar
 	rm -rf base64-$(VERSION)
