@@ -63,10 +63,7 @@ int main(int argc, char *argv[]) {
 #endif
 
 	char encode[len_enc + 1];
-	encode_base64(test_dec, len_dec, encode);
-	encode[len_enc] = 0;
-
-	char verify = verify_base64(encode, len_enc);
+	char verify = base64_verify(encode, len_enc);
 	printf("Encoded string \x1b[1m%s\x1b[m valid.\n", 
 		verify ? "is" : "is not");
 
@@ -83,7 +80,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	char decode[len_dec + 1];
-	decode_base64(test_enc, len_enc, decode);
+	base64_decode(test_enc, len_enc, decode);
 	decode[len_dec] = 0;
 
 	char decoded = strcmp(decode, test_dec);

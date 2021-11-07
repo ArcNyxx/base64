@@ -21,7 +21,7 @@ decode_char(const char ch) {
 }
 
 void
-encode_base64(const char *restrict input,
+base64_encode(const char *restrict input,
 	size_t length, char *restrict buffer) {
 	uint32_t storage = 0;
 	while (length >= 3) {
@@ -68,7 +68,7 @@ encode_base64(const char *restrict input,
 }
 
 void
-decode_base64(const char *restrict input,
+base64_decode(const char *restrict input,
 	size_t length, char *restrict buffer) {
 #ifdef USE_EQUALS_SIGN_PADDING
 	length -= (input[length - 1] == '=')
@@ -109,7 +109,7 @@ decode_base64(const char *restrict input,
 }
 
 char
-verify_base64(const char *string, size_t length) {
+base64_verify(const char *string, size_t length) {
 	char temp;
 	for (size_t index = 0; index < length; index++) {
 		temp = string[index];

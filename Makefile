@@ -7,49 +7,41 @@
 include config.mk
 
 SRC = base64.c
+HEAD = base64.h
 OBJ = $(SRC:.c=.o)
-INC = base64.h
-TEST = test.c
-TESTOBJ = $(TEST:.c=.o)
 
-all: options base64.so
+all: base64.so
 
-options:
-	@echo base64 build options:
-	@echo "CFLAGS  = $(BASE64CFLAGS)"
-	@echo "LDFLAGS = $(BASE64LDFLAGS)"
-	@echo "CC      = $(CC)"
+$(OBJ): $(HEAD) config.mk
 
 .c.o:
-	$(CC) $(BASE64CFLAGS) -c $<
-
-base64.c: base64.h
-test.c: base64.h
+	$(CC) $(CFLAGS) -c $<
 
 base64.so: $(OBJ)
-	$(CC) -shared -o $@ $(OBJ) $(BASE64LDFLAGS)
-
-test: $(OBJ) $(TESTOBJ)
-	$(CC) -o $@ $(OBJ) $(TESTOBJ) $(BASE64LDFLAGS)
+	$(CC) $(OBJ) $(LDFLAGS) -o $@
 
 clean:
-	rm -f base64.so test $(OBJ) $(TESTOBJ) base64-$(VERSION).tar.gz
+	rm -f base64.so $(OBJ) base64-$(VERSION).tar.gz
 
 dist: clean
 	mkdir -p base64-$(VERSION)
-	cp -R LICENCE Makefile README config.mk \
-		$(SRC) $(INC) $(TEST) base64-$(VERSION)
-	tar -cf - base64-$(VERSION) | gzip > base64-$(VERSION).tar.gz
+	cp -R LICENCE README Makefile config.mk $(SRC) $(HEAD) base64-$(VERSION)
+	tar -cf base64-$(VERSION).tar base64-$(VERSION)
+	gzip base64-$(VERSION).tar
 	rm -rf base64-$(VERSION)
 
-install: base64.so
-	mkdir -p $(DESTDIR)$(PREFIX)/lib
+install: all
+	mkdir -p $(DESTDIR)$(PREFIX)/lib $(DESTDIR)$(PREFIX)/include
 	cp -f base64.so $(DESTDIR)$(PREFIX)/lib
-	mkdir -p $(DESTDIR)$(PREFIX)/include
 	cp -f base64.h $(DESTDIR)$(PREFIX)/include
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/lib/base64.so \
-		$(DESTDIR)$(PREFIX)/include/base64.h
+	rm -f $(DESTDIR)$(PREFIX)/lib/base64.so $(DESTDIR)$(PREFIX)/include/base64.h
 
-.PHONY: all test options clean dist install uninstall
+options:
+	@echo base64 build options
+	@echo "CFLAGS = $(CFLAGS)"
+	@echo "LDFLAGS = $(LDFLAGS)"
+
+# implementation defined
+.PHONY: all clean dist install uninstall options

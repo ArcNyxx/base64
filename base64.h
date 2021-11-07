@@ -58,10 +58,10 @@ get_decoded_length(const size_t length) {
 #endif /* USE_EQUALS_SIGN_PADDING */
 
 char decode_char(const char ch);
-void encode_base64(const char *restrict input,
+void base64_encode(const char *restrict input,
 	size_t length, char *restrict buffer);
-void decode_base64(const char *restrict input,
+void base64_decode(const char *restrict input,
 	size_t length, char *restrict buffer);
-char verify_base64(const char *string, size_t length);
+char base64_verify(const char *string, size_t length);
 
 #endif /* BASE64_H */
