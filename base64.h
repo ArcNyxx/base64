@@ -26,7 +26,7 @@
 _STRING(ENCODE_MAP_CHAR_62) \
 _STRING(ENCODE_MAP_CHAR_63)
 
-static const char *encodeMap = ENCODE_MAP;
+static const char *encode_map = ENCODE_MAP;
 
 #ifdef USE_EQUALS_SIGN_PADDING
 size_t base64_encode_len(const size_t length);

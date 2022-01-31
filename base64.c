@@ -49,17 +49,18 @@ base64_decode_len(const size_t length)
 
 void
 base64_encode(const char *restrict input, size_t length,
-		char *restrict buffer) {
+		char *restrict buffer)
+{
 	uint32_t storage = 0;
 	while (length >= 3) {
 		storage |= (*input++) << 16;
 		storage |= (*input++) << 8;
 		storage |= *input++;
 
-		*buffer++ = encodeMap[storage >> 18];
-		*buffer++ = encodeMap[(storage >> 12) & 0x3F];
-		*buffer++ = encodeMap[(storage >> 6) & 0x3F];
-		*buffer++ = encodeMap[storage & 0x3F];
+		*buffer++ = encode_map[storage >> 18];
+		*buffer++ = encode_map[(storage >> 12) & 0x3F];
+		*buffer++ = encode_map[(storage >> 6) & 0x3F];
+		*buffer++ = encode_map[storage & 0x3F];
 
 		storage = 0;
 		length -= 3;
@@ -69,9 +70,9 @@ base64_encode(const char *restrict input, size_t length,
 		return;
 
 	storage |= (*input++) << 16;
-	*buffer++ = encodeMap[storage >> 18];
+	*buffer++ = encode_map[storage >> 18];
 	if (!--length) {
-		*buffer++ = encodeMap[(storage >> 12) & 0x3F];
+		*buffer++ = encode_map[(storage >> 12) & 0x3F];
 #ifdef USE_EQUALS_SIGN_PADDING
 		*buffer++ = '=';
 		*buffer = '=';
@@ -80,9 +81,9 @@ base64_encode(const char *restrict input, size_t length,
 	}
 
 	storage |= (*input++) << 8;
-	*buffer++ = encodeMap[(storage >> 12) & 0x3F];
+	*buffer++ = encode_map[(storage >> 12) & 0x3F];
 	if (!--length) {
-		*buffer++ = encodeMap[(storage >> 6) & 0x3F];
+		*buffer++ = encode_map[(storage >> 6) & 0x3F];
 #ifdef USE_EQUALS_SIGN_PADDING
 		*buffer = '=';
 #endif
@@ -90,13 +91,14 @@ base64_encode(const char *restrict input, size_t length,
 	}
 
 	storage |= *input;
-	*buffer++ = encodeMap[(storage >> 6) & 0x3F];
-	*buffer = encodeMap[storage & 0x3F];
+	*buffer++ = encode_map[(storage >> 6) & 0x3F];
+	*buffer = encode_map[storage & 0x3F];
 }
 
 void
 base64_decode(const char *restrict input,
-	size_t length, char *restrict buffer) {
+	size_t length, char *restrict buffer)
+{
 #ifdef USE_EQUALS_SIGN_PADDING
 	length -= (input[length - 1] == '=') +
 			(input[length - 2] == '=');
@@ -136,7 +138,8 @@ base64_decode(const char *restrict input,
 }
 
 bool
-base64_verify(const char *string, size_t length) {
+base64_verify(const char *string, size_t length)
+{
 	for (size_t index = 0; index < length; index++) {
 		char temp = string[index];
 		if (!(isalnum(temp) || temp == _CHAR(ENCODE_MAP_CHAR_62) ||
