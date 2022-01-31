@@ -1,5 +1,5 @@
 /* base64 - simple encoding library
- * Copyright (C) 2021 FearlessDoggo21
+ * Copyright (C) 2021-2022 FearlessDoggo21
  * see LICENCE file for licensing information */
 
 #include <ctype.h>
@@ -17,12 +17,39 @@ decode_char(const char ch) {
 		return ch - 'a' + 26;
 	if (ch >= '0' && ch <= '9')
 		return ch - '0' + 52;
-	return 63 - (ch == CHAR(ENCODE_MAP_CHAR_62));
+	return 63 - (ch == _CHAR(ENCODE_MAP_CHAR_62));
 }
 
+#ifdef USE_EQUALS_SIGN_PADDING
+size_t
+base64_encode_len(const size_t length)
+{
+	return ((length + 2) / 3) * 4;
+}
+
+size_t
+base64_decode_len(const char *string, const size_t length)
+{
+	return (length / 4) * 3 - (string[length - 1] == '=') -
+			(string[length - 2] == '=');
+}
+#else
+size_t
+base64_encode_len(const size_t length)
+{
+	return length + ((length + 2) / 3);
+}
+
+size_t
+base64_decode_len(const size_t length)
+{
+	return length - ((length + 2) / 4);
+}
+#endif /* USE_EQUALS_SIGN_PADDING */
+
 void
-base64_encode(const char *restrict input,
-	size_t length, char *restrict buffer) {
+base64_encode(const char *restrict input, size_t length,
+		char *restrict buffer) {
 	uint32_t storage = 0;
 	while (length >= 3) {
 		storage |= (*input++) << 16;
@@ -45,10 +72,10 @@ base64_encode(const char *restrict input,
 	*buffer++ = encodeMap[storage >> 18];
 	if (!--length) {
 		*buffer++ = encodeMap[(storage >> 12) & 0x3F];
-	#ifdef USE_EQUALS_SIGN_PADDING
+#ifdef USE_EQUALS_SIGN_PADDING
 		*buffer++ = '=';
 		*buffer = '=';
-	#endif
+#endif
 		return;
 	}
 
@@ -56,9 +83,9 @@ base64_encode(const char *restrict input,
 	*buffer++ = encodeMap[(storage >> 12) & 0x3F];
 	if (!--length) {
 		*buffer++ = encodeMap[(storage >> 6) & 0x3F];
-	#ifdef USE_EQUALS_SIGN_PADDING
+#ifdef USE_EQUALS_SIGN_PADDING
 		*buffer = '=';
-	#endif
+#endif
 		return;
 	}
 
@@ -71,8 +98,8 @@ void
 base64_decode(const char *restrict input,
 	size_t length, char *restrict buffer) {
 #ifdef USE_EQUALS_SIGN_PADDING
-	length -= (input[length - 1] == '=')
-			+ (input[length - 2] == '=');
+	length -= (input[length - 1] == '=') +
+			(input[length - 2] == '=');
 #endif
 
 	uint32_t storage = 0;
@@ -108,24 +135,21 @@ base64_decode(const char *restrict input,
 	*buffer = (char)storage;
 }
 
-char
+bool
 base64_verify(const char *string, size_t length) {
-	char temp;
 	for (size_t index = 0; index < length; index++) {
-		temp = string[index];
-		if (!(
-			isalnum(temp) ||
-			(temp == CHAR(ENCODE_MAP_CHAR_62)) ||
-			(temp == CHAR(ENCODE_MAP_CHAR_63))
-		)) {
-		#ifdef USE_EQUALS_SIGN_PADDING
-			if (temp == '=' && ((index + 1) == length ||
-				(string[index + 1] == '=' && (index + 2) == length))
-			)
-				return 1;
-		#endif
-			return 0;
+		char temp = string[index];
+		if (!(isalnum(temp) || temp == _CHAR(ENCODE_MAP_CHAR_62) ||
+				temp == _CHAR(ENCODE_MAP_CHAR_63))) {
+#ifdef USE_EQUALS_SIGN_PADDING
+			/* if equals sign and length is next or next is
+			 * another equals sign and length follows */
+			if (temp == '=' && ((string[index + 1] == '=' &&
+					index + 2 == length) || index + 1 == length))
+				return true
+#endif
+			return false;
 		}
 	}
-	return 1;
+	return true;
 }

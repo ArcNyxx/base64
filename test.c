@@ -30,8 +30,7 @@ diff_chars(const char *restrict string,
 }
 
 int main(int argc, char *argv[]) {
-	printf("%s %c %c\n", encodeMap,
-		CHAR(ENCODE_MAP_CHAR_62), CHAR(ENCODE_MAP_CHAR_63));
+	printf("[%s]\n", encodeMap);
 
 	const char *test_dec, *test_enc;
 	size_t len_dec, len_enc;
@@ -40,27 +39,29 @@ int main(int argc, char *argv[]) {
 	"I27iKN4Lst%@sA2N7&IX9dXl-D&^-A-B$7=i9dDNdg7ygcK#KBFT?A9T&h|k#=l=3699Rp1pPhJ"
 	"O+fx=fdD^b0s%$i?EPBq$mqX9n3xr*OEMk3*!dbHu=Uy5nc3O9U3h4rCW&lk$EkZ!@XD6*d0Bj#"
 	"==qbCnW*g=E0r^ItOIizy0SdMe32xh9xupKZsRwx7hj-YG!Wpc$d^";
-	len_enc = get_encoded_length(strlen(test_dec));
+	len_enc = base64_encode_len(strlen(test_dec));
 
 #ifdef USE_EQUALS_SIGN_PADDING
 	test_enc = "TlhCVXdsXk1ZWlZKaTQ3YTEqbjIyQGlUQ0QtJVozck0mWUpvTFUmO"
-	"VNzNllfVDUqc1c" STRING(ENCODE_MAP_CHAR_63) "dWZJMjdpS040THN0JUBzQTJONyZJWDl"
+	"VNzNllfVDUqc1c" _STRING(ENCODE_MAP_CHAR_63) "dWZJMjdpS040THN0JUBzQTJONyZJWDl"
 	"kWGwtRCZeLUEtQiQ3PWk5ZEROZGc3eWdjSyNLQkZUP0E5VCZofGsjPWw9MzY5OVJwMXBQaEpPK2"
-	"Z4PWZkRF5iMHMlJGk" STRING(ENCODE_MAP_CHAR_63) "RVBCcSRtcVg5bjN4cipPRU1rMyoh"
+	"Z4PWZkRF5iMHMlJGk" _STRING(ENCODE_MAP_CHAR_63) "RVBCcSRtcVg5bjN4cipPRU1rMyoh"
 	"ZGJIdT1VeTVuYzNPOVUzaDRyQ1cmbGskRWtaIUBYRDYqZDBCaiM9PXFiQ25XKmc9RTByXkl0T0l"
 	"penkwU2RNZTMyeGg5eHVwS1pzUnd4N2hqLVlHIVdwYyRkXg==";
-	len_dec = get_decoded_length(test_enc, strlen(test_enc));
+	len_dec = base64_decode_len(test_enc, strlen(test_enc));
 #else
 	test_enc = "TlhCVXdsXk1ZWlZKaTQ3YTEqbjIyQGlUQ0QtJVozck0mWUpvTFUmO"
-	"VNzNllfVDUqc1c" STRING(ENCODE_MAP_CHAR_63) "dWZJMjdpS040THN0JUBzQTJONyZJWDl"
+	"VNzNllfVDUqc1c" _STRING(ENCODE_MAP_CHAR_63) "dWZJMjdpS040THN0JUBzQTJONyZJWDl"
 	"kWGwtRCZeLUEtQiQ3PWk5ZEROZGc3eWdjSyNLQkZUP0E5VCZofGsjPWw9MzY5OVJwMXBQaEpPK2"
-	"Z4PWZkRF5iMHMlJGk" STRING(ENCODE_MAP_CHAR_63) "RVBCcSRtcVg5bjN4cipPRU1rMyoh"
+	"Z4PWZkRF5iMHMlJGk" _STRING(ENCODE_MAP_CHAR_63) "RVBCcSRtcVg5bjN4cipPRU1rMyoh"
 	"ZGJIdT1VeTVuYzNPOVUzaDRyQ1cmbGskRWtaIUBYRDYqZDBCaiM9PXFiQ25XKmc9RTByXkl0T0l"
 	"penkwU2RNZTMyeGg5eHVwS1pzUnd4N2hqLVlHIVdwYyRkXg";
-	len_dec = get_decoded_length(strlen(test_enc));
+	len_dec = base64_decode_len(strlen(test_enc));
 #endif
 
 	char encode[len_enc + 1];
+	base64_encode(test_dec, strlen(test_dec), encode);
+
 	char verify = base64_verify(encode, len_enc);
 	printf("Encoded string \x1b[1m%s\x1b[m valid.\n", 
 		verify ? "is" : "is not");
@@ -68,6 +69,7 @@ int main(int argc, char *argv[]) {
 	char encoded = strcmp(encode, test_enc);
 	printf("Encoded string \x1b[1m%s\x1b[m correct.\n", 
 		encoded ? "is not" : "is");
+
 	if (encoded) {
 		/* test function actually working properly */
 		memcpy(encode + 12, "aweouhwaeunaeriuanero", 21);
