@@ -1,15 +1,15 @@
-/*
- * base64 - simple encoding library
+/* base64 - simple encoding library
  * Copyright (C) 2021 FearlessDoggo21
- * see LICENCE file for licensing information
- */
+ * see LICENCE file for licensing information */
 
 #include <ctype.h>
 #include <stdint.h>
 
 #include "base64.h"
 
-char
+static char decode_char(const char ch);
+
+static char
 decode_char(const char ch) {
 	if (ch >= 'A' && ch <= 'Z')
 		return ch - 'A';

@@ -1,12 +1,10 @@
-/*
- * base64 -simple encoding library
+/* base64 -simple encoding library
  * Copyright (C) 2021 FearlessDoggo21
- * see LICENCE file for licensing information
- */
+ * see LICENCE file for licensing information */
 
 #include <limits.h>
 #if UCHAR_MAX != 255
-#error `char` type does not hold 8 bits.
+#error "'char' type does not hold 8 bits."
 #endif /* UCHAR_MAX != 255 */
 
 #ifndef BASE64_H
@@ -57,7 +55,6 @@ get_decoded_length(const size_t length) {
 }
 #endif /* USE_EQUALS_SIGN_PADDING */
 
-char decode_char(const char ch);
 void base64_encode(const char *restrict input,
 	size_t length, char *restrict buffer);
 void base64_decode(const char *restrict input,

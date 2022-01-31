@@ -1,15 +1,28 @@
-base64
-======
-base64 is a small code library for simply encoding and decoding binary data to
-and from a printable format.
+base64 - base64 encoding/decoding library
+=========================================
+base64 is a tiny library for encoding and decoding binary data to and from
+base64 format, defined in RFC 4648. This library is not designed for heavy use,
+yet it is perfect for applications which are small or must use minimal memory,
+or for quick testing purposes.
 
-philosophy
+Philosophy
 ----------
-Created to be the fastest base64 encoder/decoder which conforms to the
+base64 is made to be the fastest base64 encoder/decoder which conforms to the
 following criteria:
-- readable by programmers of any skill level
-- easily translatable into other programming languages
-- cross-platform and system
 
-Such criteria disallow things like SIMD or endianness checking, rendering this
-codebase subpar for any heavy-duty application.
+    must not overuse memory (no huge lookup tables)
+    must be readable by anyone (for ease of translation into other languages)
+    must be cross-platform (no memory endianness tricks or SIMD)
+
+
+Using base64
+------------
+There are multiple library functions, each detailed in separate man pages which
+are installed alongside the library. Here is a list of each exposed function:
+
+    base64_encode(const char *restrict input, size_t length,
+            char *restrict buffer)
+    base64_decode(const char *restrict input, size_t length,
+            char *restrict buffer)
+    base64_verify(const char *string, size_t length)
+
