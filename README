@@ -29,3 +29,18 @@ are installed alongside the library. Here is a list of each exposed function:
     size_t base64_encode_len(const size_t len)
     size_t base64_decode_len([const char *string, ]const size_t length)
 
+
+Installation
+------------
+Edit config.mk to match your local setup.
+
+Afterwards, enter the following command to build and install base64 (if
+necessary, as root):
+
+    make clean install
+
+
+Configuration
+-------------
+The configuration of base64 is done by editing base64.h and (re)compiling the
+source code.
