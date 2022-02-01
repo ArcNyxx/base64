@@ -11,12 +11,16 @@ base64_encode_len \- get base64 encoded length
 size_t base64_encode_len(const size_t \fIlength\fP);
 .EE
 .SH DESCRIPTION
-\fBbase64_encode_len\fP(3) returns the exact length to create a buffer for the
-output of \fBbase64_encode\fP(3) based on the \fIlength\fP of the unencoded
-string.
+.BR base64_encode_len (3)
+returns the exact length to create a buffer for the output of
+.BR base64_encode (3)
+based on the
+.I length
+of the unencoded string.
 .SH RETURN VALUE
-\fBbase64_encode_len\fP(3) returns the exact length required to store a base64
-encoded string based on the length of the input string in bytes.
+.BR base64_encode_len (3)
+returns the exact length required to store a base64 encoded string based on the
+length of the input string in bytes.
 .SH EXAMPLE
 To create an output buffer, encode data into it, then print the encoded data:
 .PP
@@ -35,7 +39,7 @@ main(void)
 	char buffer[len + 1];
 	buffer[len] = '\\0';
 
-	/* encodes then and prints the encoded data */
+	/* encodes then prints the encoded data */
 	base64_encode(data, strlen(data), buffer);
 	printf("%s\\n", buffer);
 }
@@ -43,5 +47,5 @@ main(void)
 .SH AUTHOR
 Written by FearlessDoggo21.
 .SH SEE ALSO
-\fBbase64_decode\fP(3), \fBbase64_verify\fP(3), \fBbase64_encode_len\fP(3),
-\fBbase64_decode_len\fP(3)
+.BR base64_decode "(3), " base64_verify "(3), " base64_encode_len "(3), "
+.BR base64_decode_len (3)

@@ -12,20 +12,31 @@ void base64_encode(const char *restrict \fIinput\fP, size_t \fIlength\fP,
 		char *restrict \fIbuffer\fP);
 .EE
 .SH DESCRIPTION
-\fBbase64_encode\fP(3) encodes arbitrary binary data, stored at \fIinput\fP,
-with the length of \fIlength\fP bytes into base64 format, outputting the
-encoded data into \fIbuffer\fP.
+.BR base64_encode (3)
+encodes arbitrary binary data, stored at
+.IR input ,
+with the length of
+.I length
+bytes into base64 format, outputting the encoded data into
+.IR buffer .
 .SH RETURN VALUE
-\fBbase64_encode\fP(3) writes the base64 encoded data to \fIbuffer\fP, and if
-the \fIUSE_EQUALS_SIGN_PADDING\fP macro is defined, a number of equals signs
-('=') to the end.  A NUL ('\\0') byte is not automatically written to the end
-of the buffer, string operations performed on the resulting data will require a
-length or a NUL byte to be appended.
+.BR base64_encode (3)
+writes the base64 encoded data to
+.IR buffer ,
+and if the
+.I USE_EQUALS_SIGN_PADDING
+macro is defined, a number of equals signs ('=') to the end.  A NUL ('\\0')
+byte is not automatically written to the end of the buffer, string operations
+performed on the resulting data will require a length or a NUL byte to be
+appended.
 .SH NOTES
-Callers must ensure that \fIbuffer\fP is a pointer to a memory location large
-enough to store the data as \fBbase64_encode\fP(3) does not check to ensure a
-buffer overflow does not occur.  Use of the \fBbase64_encode_len\fP(3) function
-is recommended for determining the output length ahead of time.
+Callers must ensure that
+.I buffer
+is a pointer to a memory location large enough to store the data as
+.BR base64_encode (3)
+does not check to ensure a buffer overflow does not occur.  Use of the
+.BR base64_encode_len (3)
+function is recommended for determining the output length ahead of time.
 .SH EXAMPLE
 To create an output buffer, encode data into it, then print the encoded data:
 .PP
@@ -44,7 +55,7 @@ main(void)
 	char buffer[len + 1];
 	buffer[len] = '\\0';
 
-	/* encodes then and prints the encoded data */
+	/* encodes and prints the encoded data */
 	base64_encode(data, strlen(data), buffer);
 	printf("%s\\n", buffer);
 }
@@ -52,5 +63,5 @@ main(void)
 .SH AUTHOR
 Written by FearlessDoggo21.
 .SH SEE ALSO
-\fBbase64_decode\fP(3), \fBbase64_verify\fP(3), \fBbase64_encode_len\fP(3),
-\fBbase64_decode_len\fP(3)
+.BR base64_decode "(3), " base64_verify "(3), " base64_encode_len "(3), "
+.BR base64_decode_len (3)

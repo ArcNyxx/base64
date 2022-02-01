@@ -11,14 +11,24 @@ base64_verify \- verify base64 encoded information
 bool base64_verify(const char *\fIstring\fR, size_t \fIlength\fP);
 .EE
 .SH DESCRIPTION
-\fBbase64_verify\fP(3) verifies whether the data stored in \fIstring\fP, with
-a length of \fIlength\fP bytes, is base64 encoded.
+.BR base64_verify (3)
+verifies whether the data stored in
+.IR string ,
+with a length of
+.I length
+bytes, is base64 encoded.
 .SH RETURN VALUE
-\fBbase64_verify\fP(3) returns \fBtrue\fP if the data is base64 encoded and
-\fBfalse\fP otherwise.
+.BR base64_verify (3)
+returns
+.B true
+if the data is base64 encoded and
+.B false
+otherwise.
 .SH NOTES
-The \fIlength\fP parameter does not include any NUL ('\\0') characters which
-may terminate the data, only the data itself.
+The
+.I length
+parameter does not include any NUL ('\\0') characters which may terminate the
+data, only the possibly base64 encoded data itself.
 .SH EXAMPLE
 .EX
 #include <base64.h>
@@ -36,7 +46,7 @@ main(void)
 		char buffer[len + 1];
 		buffer[len] = '\\0';
 
-		/* encodes then and prints the encoded data */
+		/* encodes then prints the encoded data */
 		base64_decode(data, strlen(data), buffer);
 		printf("%s", buffer);
 	} else {
@@ -47,5 +57,5 @@ main(void)
 .SH AUTHOR
 Written by FearlessDoggo21.
 .SH SEE ALSO
-\fBbase64_encode\fP(3), \fBbase64_decode\fP(3), \fBbase64_encode_len\fP(3),
-\fBbase64_decode_len\fP(3)
+.BR base64_encode "(3), " base64_decode "(3), " base64_encode_len "(3), "
+.BR base64_decode_len (3)
