@@ -1,0 +1,47 @@
+.\" base64 - simple encoding library
+.\" Copyright (C) 2022 FearlessDoggo21
+.\" see LICENCE file for licensing information
+.TH BASE64_ENCODE_LEN 3 base64\-VERSION
+.SH NAME
+base64_encode_len \- get base64 encoded length
+.SH SYNOPSIS
+.EX
+#include <base64.h>
+
+size_t base64_encode_len(const size_t \fIlength\fP);
+.EE
+.SH DESCRIPTION
+\fBbase64_encode_len\fP(3) returns the exact length to create a buffer for the
+output of \fBbase64_encode\fP(3) based on the \fIlength\fP of the unencoded
+string.
+.SH RETURN VALUE
+\fBbase64_encode_len\fP(3) returns the exact length required to store a base64
+encoded string based on the length of the input string in bytes.
+.SH EXAMPLE
+To create an output buffer, encode data into it, then print the encoded data:
+.PP
+.EX
+#include <base64.h>
+#include <stdio.h>
+#include <string.h>
+
+int
+main(void)
+{
+	static const char *data = "Hello World!\\n";
+
+	/* creates the output buffer of the exact size necessary */
+	size_t len = base64_encode_len(strlen(data));
+	char buffer[len + 1];
+	buffer[len] = '\\0';
+
+	/* encodes then and prints the encoded data */
+	base64_encode(data, strlen(data), buffer);
+	printf("%s\\n", buffer);
+}
+.EE
+.SH AUTHOR
+Written by FearlessDoggo21.
+.SH SEE ALSO
+\fBbase64_decode\fP(3), \fBbase64_verify\fP(3), \fBbase64_encode_len\fP(3),
+\fBbase64_decode_len\fP(3)

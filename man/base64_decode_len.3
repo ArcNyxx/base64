@@ -1,0 +1,56 @@
+.\" base64 - simple encoding library
+.\" Copyright (C) 2022 FearlessDoggo21
+.\" see LICENCE file for licensing information
+.TH BASE64_DECODE_LEN 3 base64\-VERSION
+.SH NAME
+base64_decode_len \- get base64 decoded length
+.SH SYNOPSIS
+.EX
+#include <base64.h>
+
+#ifdef USE_EQUALS_SIGN_PADDING
+size_t base64_decode_len(const char *\fIstring\fP, const size_t \fIlength\fP);
+#else
+size_t base64_decode_len(const size_t \fIlength\fP);
+#endif
+.EE
+.SH DESCRIPTION
+\fBbase64_decode_len\fP(3) returns the exact length to create a buffer for the
+output of \fBbase64_decode\fP(3) based on the \fIlength\fP of the unencoded
+string.  When \fIUSE_EQUALS_SIGN_PADDING\fP is defined, the \fIstring\fP
+parameter must hold the full input string.
+.SH RETURN VALUE
+\fBbase64_encode_len\fP(3) returns the exact length required to store a decoded
+string based on the length of the input string in bytes.
+.SH NOTES
+\fBbase64_decode_len\fP(3) has a differing function prototype based on whether
+\fIUSE_EQUALS_SIGN_PADDING\fP is defined, which must be taken into
+consideration when both building \fBbase64\fP and writing code which uses it.
+.SH EXAMPLE
+To create an output buffer, decode data into it, then print the decoded data:
+.PP
+.EX
+#include <base64.h>
+#include <stdio.h>
+#include <string.h>
+
+int
+main(void)
+{
+        static const char *data = "SGVsbG8gV29ybGQhCg";
+
+        /* creates the output buffer of the exact size necessary */
+        size_t len = base64_decode_len(strlen(data));
+        char buffer[len + 1];
+        buffer[len] = '\\0';
+
+        /* encodes then and prints the encoded data */
+        base64_decode(data, strlen(data), buffer);
+        printf("%s", buffer);
+}
+.EE
+.SH AUTHOR
+Written by FearlessDoggo21.
+.SH SEE ALSO
+\fBbase64_encode\fP(3), \fBbase64_verify\fP(3), \fBbase64_encode_len\fP(3),
+\fBbase64_decode_len\fP(3)
