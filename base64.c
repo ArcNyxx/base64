@@ -96,12 +96,11 @@ base64_encode(const char *restrict input, size_t length,
 }
 
 void
-base64_decode(const char *restrict input,
-	size_t length, char *restrict buffer)
+base64_decode(const char *restrict input, size_t length,
+		char *restrict buffer)
 {
 #ifdef USE_EQUALS_SIGN_PADDING
-	length -= (input[length - 1] == '=') +
-			(input[length - 2] == '=');
+	length -= (input[length - 1] == '=') + (input[length - 2] == '=');
 #endif
 
 	uint32_t storage = 0;
@@ -145,8 +144,8 @@ base64_verify(const char *string, size_t length)
 		if (!(isalnum(temp) || temp == _CHAR(ENCODE_MAP_CHAR_62) ||
 				temp == _CHAR(ENCODE_MAP_CHAR_63))) {
 #ifdef USE_EQUALS_SIGN_PADDING
-			/* if equals sign and length is next or next is
-			 * another equals sign and length follows */
+			/* if equals sign and length is next or next
+			 * is another equals sign and length follows */
 			if (temp == '=' && ((string[index + 1] == '=' &&
 					index + 2 == length) || index + 1 == length))
 				return true

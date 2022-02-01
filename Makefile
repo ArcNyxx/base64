@@ -10,18 +10,18 @@ SRC = base64.c
 HEAD = base64.h
 OBJ = $(SRC:.c=.o)
 
-all: base64.so
+all: libbase64.so
 
 $(OBJ): $(HEAD) config.mk
 
 .c.o:
 	$(CC) $(CFLAGS) -c $<
 
-base64.so: $(OBJ)
+libbase64.so: $(OBJ)
 	$(CC) $(OBJ) $(LDFLAGS) -o $@
 
 clean:
-	rm -f base64.so $(OBJ) base64-$(VERSION).tar.gz
+	rm -f libbase64.so $(OBJ) base64-$(VERSION).tar.gz
 
 dist: clean
 	mkdir -p base64-$(VERSION)
@@ -33,11 +33,12 @@ dist: clean
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/lib $(DESTDIR)$(PREFIX)/include
-	cp -f base64.so $(DESTDIR)$(PREFIX)/lib
+	cp -f libbase64.so $(DESTDIR)$(PREFIX)/lib
 	cp -f base64.h $(DESTDIR)$(PREFIX)/include
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/lib/base64.so $(DESTDIR)$(PREFIX)/include/base64.h
+	rm -f $(DESTDIR)$(PREFIX)/lib/libbase64.so \
+		$(DESTDIR)$(PREFIX)/include/base64.h
 
 options:
 	@echo base64 build options
