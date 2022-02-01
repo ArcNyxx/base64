@@ -1,10 +1,11 @@
 # base64 - simple encoding library
-# Copyright (C) 2021 FearlessDoggo21
+# Copyright (C) 2022 FearlessDoggo21
 # see LICENCE file for licensing information
 
-VERSION = 0.1.1
+VERSION = 1.0.0
 
 PREFIX = /usr/local
+MANPREFIX = $(PREFIX)/share/man
 
 WPROFILE = -Wall -Wextra -Wmissing-prototypes -Wstrict-prototypes \
 -Wmissing-declarations -Wswitch-default -Wunreachable-code -Wcast-align \

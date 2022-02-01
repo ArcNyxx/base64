@@ -14,13 +14,14 @@ void base64_decode(const char *restrict \fIinput\fP, size_t \fIlength\fP,
 .SH DESCRIPTION
 \fBbase64_decode\fP(3) decodes base64 data, stored at \fIinput\fP, with the
 length of \fIlength\fP bytes into arbitrary binary data, outputteing the
-decoded data into \fIbuffer\fP.
+decoded data into \fIbuffer\fP.  If the \fIUSE_EQUALS_SIGN_PADDING\fP macro is
+defined, a number of equals signs ('=') permitted as padding at the end will be
+ignored.
 .SH RETURN VALUE
-\fBbase64_decode\fP(3) writes the decoded binary data to \fIbuffer\fP, and if
-the \fIUSER_EQUALS_SIGN_PADDING\fP macro is defined, a number of equals signs
-('=') to the end.  A NUL ('\\0') byte is not automatically written to the end
-of the buffer, string operations performed on the resulting data will require a
-length of NUL byte to be appended.
+\fBbase64_decode\fP(3) writes the decoded binary data to \fIbuffer\fP.  A NUL
+('\\0') byte is not automatically written to the end of the buffer, string
+operations performed on the resulting data will require a length of NUL byte to
+be appended.
 .SH NOTES
 Callers must ensure that \fIbuffer\fP is a pointer to a memory location large
 enough to store the data as \fBbase64_decode\fP(3) does not check to ensure a
