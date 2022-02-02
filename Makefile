@@ -46,6 +46,11 @@ install: all
 		$(DESTDIR)$(MANPREFIX)/man3/base64_encode_len.3
 	sed "s/VERSION/$(VERSION)/g" < man/base64_decode_len.3 > \
 		$(DESTDIR)$(MANPREFIX)/man3/base64_decode_len.3
+	chmod 644 $(DESTDIR)$(MANPREFIX)/man3/base64_encode.3 \
+		$(DESTDIR)$(MANPREFIX)/man3/base64_decode.3 \
+		$(DESTDIR)$(MANPREFIX)/man3/base64_verify.3 \
+		$(DESTDIR)$(MANPREFIX)/man3/base64_encode_len.3 \
+		$(DESTDIR)$(MANPREFIX)/man3/base64_decode_len.3
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/lib/libbase64.so \
