@@ -1,5 +1,5 @@
 /* base64 - simple encoding library
- * Copyright (C) 2021-2022 FearlessDoggo21
+ * Copyright (C) 2021-2022 ArcNyxx
  * see LICENCE file for licensing information */
 
 #include <limits.h>

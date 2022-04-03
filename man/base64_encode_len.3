@@ -1,5 +1,5 @@
 .\" base64 - simple encoding library
-.\" Copyright (C) 2022 FearlessDoggo21
+.\" Copyright (C) 2022 ArcNyxx
 .\" see LICENCE file for licensing information
 .TH BASE64_ENCODE_LEN 3 base64\-VERSION
 .SH NAME
@@ -8,21 +8,21 @@ base64_encode_len \- get base64 encoded length
 .EX
 #include <base64.h>
 
-size_t base64_encode_len(const size_t \fIlength\fP);
+size_t base64_encode_len(const size_t length);
 .EE
 .SH DESCRIPTION
 .BR base64_encode_len (3)
-returns the exact length to create a buffer for the output of
+returns the length to create a buffer for the output of
 .BR base64_encode (3)
 based on the
 .I length
-of the unencoded string.
+of the encoded string.
 .SH RETURN VALUE
 .BR base64_encode_len (3)
-returns the exact length required to store a base64 encoded string based on the
-length of the input string in bytes.
+returns the length required to store an encoded string based on the length of
+the input string in bytes.
 .SH EXAMPLE
-To create an output buffer, encode data into it, then print the encoded data:
+Create an output buffer, decode data, then print the resulting data:
 .PP
 .EX
 #include <base64.h>
@@ -32,20 +32,20 @@ To create an output buffer, encode data into it, then print the encoded data:
 int
 main(void)
 {
-	static const char *data = "Hello World!\\n";
+	static const char *data = "SGVsbG8gV29ybGQhCg";
 
 	/* creates the output buffer of the exact size necessary */
-	size_t len = base64_encode_len(strlen(data));
+	size_t len = base64_decode_len(strlen(data));
 	char buffer[len + 1];
-	buffer[len] = '\\0';
+	buffer[len] = ' ';
 
-	/* encodes then prints the encoded data */
-	base64_encode(data, strlen(data), buffer);
-	printf("%s\\n", buffer);
+	/* encodes then prints the decoded data */
+	base64_decode(data, strlen(data), buffer);
+	printf("%s", buffer);
 }
 .EE
 .SH AUTHOR
-Written by FearlessDoggo21.
+Written by ArcNyxx.
 .SH SEE ALSO
-.BR base64_decode "(3), " base64_verify "(3), " base64_encode_len "(3), "
+.BR base64_decode (3),\  base64_verify (3),\  base64_encode_len (3),
 .BR base64_decode_len (3)

@@ -1,5 +1,5 @@
 .\" base64 - simple encoding library
-.\" Copyright (C) 2022 FearlessDoggo21
+.\" Copyright (C) 2022 ArcNyxx
 .\" see LICENCE file for licensing information
 .TH BASE64_ENCODE 3 base64\-VERSION
 .SH NAME
@@ -8,37 +8,37 @@ base64_encode \- base64 encode arbitrary binary data
 .EX
 #include <base64.h>
 
-void base64_encode(const char *restrict \fIinput\fP, size_t \fIlength\fP,
-		char *restrict \fIbuffer\fP);
+void base64_encode(const char *restrict input, size_t length,
+		char *restrict buffer);
 .EE
 .SH DESCRIPTION
 .BR base64_encode (3)
-encodes arbitrary binary data, stored at
+encodes arbitrary binary data stored at
 .IR input ,
-with the length of
 .I length
-bytes into base64 format, outputting the encoded data into
+bytes long, into base64 data, outputting the encoded data into
 .IR buffer .
 .SH RETURN VALUE
 .BR base64_encode (3)
-writes the base64 encoded data to
-.IR buffer ,
-and if the
-.I USE_EQUALS_SIGN_PADDING
-macro is defined, a number of equals signs ('=') to the end.  A NUL ('\\0')
-byte is not automatically written to the end of the buffer, string operations
-performed on the resulting data will require a length or a NUL byte to be
-appended.
+returns
+.BR void ,
+only writing the encoded base64 data to
+.IR buffer .
 .SH NOTES
+A NUL ('\\0') character is not automatically appended to the end of
+.IR buffer .
+String operations performed on the resulting data should be performed with
+caution.
+.PP
 Callers must ensure that
 .I buffer
-is a pointer to a memory location large enough to store the data as
+is a pointer to a memory location large enough to store the data, as
 .BR base64_encode (3)
 does not check to ensure a buffer overflow does not occur.  Use of the
 .BR base64_encode_len (3)
-function is recommended for determining the output length ahead of time.
+function is recommended to determine the length to allocate ahead of time.
 .SH EXAMPLE
-To create an output buffer, encode data into it, then print the encoded data:
+Create an output buffer, encode data,  then print the resulting data:
 .PP
 .EX
 #include <base64.h>
@@ -61,7 +61,7 @@ main(void)
 }
 .EE
 .SH AUTHOR
-Written by FearlessDoggo21.
+Written by ArcNyxx.
 .SH SEE ALSO
-.BR base64_decode "(3), " base64_verify "(3), " base64_encode_len "(3), "
+.BR base64_decode (3),\  base64_verify (3),\  base64_encode_len (3),
 .BR base64_decode_len (3)

@@ -1,46 +1,17 @@
-base64 - base64 encoding/decoding library
-=========================================
+base64 - simple encoding library
+================================
 base64 is a tiny library for encoding and decoding binary data to and from
-base64 format, defined in RFC 4648. This library is not designed for heavy use,
-yet it is perfect for applications which are small or must use minimal memory,
-or for quick testing purposes.
-
-Philosophy
-----------
-base64 is made to be the fastest base64 encoder/decoder which conforms to the
-following criteria:
-
-    must not overuse memory (no huge lookup tables)
-    must be readable by anyone (for ease of translation into other languages)
-    must be cross-platform (no memory endianness tricks or SIMD)
-
-
-Using base64
-------------
-There are multiple library functions, each detailed in separate man pages which
-are installed alongside the library. Here is a list of each exposed function:
-
-    void base64_encode(const char *restrict input, size_t length,
-            char *restrict buffer)
-    void base64_decode(const char *restrict input, size_t length,
-            char *restrict buffer)
-    bool base64_verify(const char *string, size_t length)
-
-    size_t base64_encode_len(const size_t len)
-    size_t base64_decode_len([const char *string, ]const size_t length)
-
+base64 format, as defined in RFC 4648.  base64 is designed to be simple and
+fast while also being cross-platform and having a small memory footprint for
+use in embedded applications.
 
 Installation
 ------------
-Edit config.mk to match your local setup.
+base64 comes with a Makefile and config.mk file for configurable building and
+testing.  Edit the latter to match your local setup (base64 is installed into
+the /usr/local namespace by default, you may need to modify your $PATH).
 
-Afterwards, enter the following command to build and install base64 (if
-necessary, as root):
+base64 can be built and installed with the following command (run as root):
 
     make clean install
 
-
-Configuration
--------------
-The configuration of base64 is done by editing base64.h and (re)compiling the
-source code.

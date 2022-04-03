@@ -1,5 +1,5 @@
 .\" base64 - simple encoding library
-.\" Copyright (C) 2022 FearlessDoggo21
+.\" Copyright (C) 2022 ArcNyxx
 .\" see LICENCE file for licensing information
 .TH BASE64_VERIFY 3 base64\-VERSION
 .SH NAME
@@ -8,20 +8,21 @@ base64_verify \- verify base64 encoded information
 .EX
 #include <base64.h>
 
-bool base64_verify(const char *\fIstring\fR, size_t \fIlength\fP);
+bool base64_verify(const char *string, size_t length);
 .EE
 .SH DESCRIPTION
 .BR base64_verify (3)
-verifies whether the data stored in
+verifies whether
 .IR string ,
-with a length of
 .I length
-bytes, is base64 encoded.
+bytes long, is base64 encoded data.
 .SH RETURN VALUE
 .BR base64_verify (3)
 returns
 .B true
-if the data is base64 encoded and
+if
+.I string
+is base64 encoded and
 .B false
 otherwise.
 .SH NOTES
@@ -30,6 +31,8 @@ The
 parameter does not include any NUL ('\\0') characters which may terminate the
 data, only the possibly base64 encoded data itself.
 .SH EXAMPLE
+Verify base64 encoded data, create an output buffer, decode data, then print
+the resulting data:
 .EX
 #include <base64.h>
 #include <stdio.h>
@@ -55,7 +58,7 @@ main(void)
 }
 .EE
 .SH AUTHOR
-Written by FearlessDoggo21.
+Written by ArcNyxx.
 .SH SEE ALSO
-.BR base64_encode "(3), " base64_decode "(3), " base64_encode_len "(3), "
+.BR base64_encode (3),\  base64_decode (3),\  base64_encode_len (3),
 .BR base64_decode_len (3)

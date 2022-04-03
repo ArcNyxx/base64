@@ -1,5 +1,5 @@
 .\" base64 - simple encoding library
-.\" Copyright (C) 2022 FearlessDoggo21
+.\" Copyright (C) 2022 ArcNyxx
 .\" see LICENCE file for licensing information
 .TH BASE64_DECODE 3 base64\-VERSION
 .SH NAME
@@ -8,39 +8,42 @@ base64_decode \- base64 decode into arbitrary binary data
 .EX
 #include <base64.h>
 
-void base64_decode(const char *restrict \fIinput\fP, size_t \fIlength\fP,
-		char *restrict \fIbuffer\fP);
+void base64_decode(const char *restrict input, size_t length,
+		char *restrict buffer);
 .EE
 .SH DESCRIPTION
 .BR base64_decode (3)
-decodes base64 data, stored at
+decodes base64 data stored at
 .IR input ,
-with the
-length of
 .I length
-bytes into arbitrary binary data, outputteing the decoded data into
-.IR buffer ". "
+bytes long, into arbitrary binary data, outputting the decoded data into
+.IR buffer .
 If the
-.I USE_EQUALS_SIGN_PADDING
-macro is defined, a number of equals signs ('=') permitted as padding at the
-end will be ignored.
+.B USE_EQUALS_SIGN_PADDING
+macro is defined, a number of equals signs ('=') may be permitted and ignored
+at the end of
+.IR input .
 .SH RETURN VALUE
 .BR base64_decode (3)
-writes the decoded binary data to
-.IR buffer ". "
-A NUL ('\\0') byte is not automatically written to the end of the buffer,
-string operations performed on the resulting data will require a length of NUL
-byte to be appended.
+returns
+.BR void ,
+only writing the decoded binary data to
+.IR buffer .
 .SH NOTES
+A NUL ('\\0') character is not automatically appended to the end of
+.IR buffer .
+String operations performed on the resulting data should be performed with
+caution.
+.PP
 Callers must ensure that
 .I buffer
-is a pointer to a memory location large enough to store the data as
+is a pointer to a memory location large enough to store the data, as
 .BR base64_decode (3)
 does not check to ensure a buffer overflow does not occur.  Use of the
 .BR base64_decode_len (3)
-function is recommended for determining the output length ahead of time.
+function is recommended to determine the length to allocate ahead of time.
 .SH EXAMPLE
-To create an output buffer, decode data into it, then print the decoded data:
+Create an output buffer, decode data, then print the resulting data:
 .PP
 .EX
 #include <base64.h>
@@ -63,7 +66,7 @@ main(void)
 }
 .EE
 .SH AUTHOR
-Written by FearlessDoggo21.
+Written by ArcNyxx.
 .SH SEE ALSO
-.BR base64_encode "(3), " base64_verify "(3), " base64_encode_len "(3), "
+.BR base64_encode (3),\  base64_verify (3),\  base64_encode_len (3),
 .BR base64_decode_len (3)

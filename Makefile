@@ -1,5 +1,5 @@
 # base64 - simple encoding library
-# Copyright (C) 2021 FearlessDoggo21
+# Copyright (C) 2021 ArcNyxx
 # see LICENCE file for licensing information
 
 .POSIX:
@@ -13,6 +13,12 @@ MAN = man/base64_encode.3 man/base64_decode.3 man/base64_verify.3 \
 OBJ = $(SRC:.c=.o)
 
 all: libbase64.so
+
+options:
+	@echo base64 build options
+	@echo "COMPILER = $(CC)"
+	@echo "CFLAGS   = $(CFLAGS)"
+	@echo "LDFLAGS  = $(LDFLAGS)"
 
 $(OBJ): $(HEAD) config.mk
 
@@ -38,8 +44,7 @@ install: all
 		$(DESTDIR)$(MANPREFIX)/man3
 	cp -f libbase64.so $(DESTDIR)$(PREFIX)/lib
 	cp -f base64.h $(DESTDIR)$(PREFIX)/include
-	for PAGE in $(MAN); \
-	do \
+	for PAGE in $(MAN); do \
 		sed "s/VERSION/$(VERSION)/g" "$$PAGE" > \
 			$(DESTDIR)$(MANPREFIX)/man3/$$(basename $$PAGE); \
 		chmod 644 $(DESTDIR)$(MANPREFIX)/man3/$$(basename $$PAGE); \
@@ -49,10 +54,5 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/lib/libbase64.so \
 		$(DESTDIR)$(PREFIX)/include/base64.h
 
-options:
-	@echo base64 build options
-	@echo "CFLAGS = $(CFLAGS)"
-	@echo "LDFLAGS = $(LDFLAGS)"
-
 # implementation defined
-.PHONY: all clean dist install uninstall options
+.PHONY: all options clean dist install uninstall
